@@ -21,7 +21,7 @@
  *   portal -> midilar [style=dotted, label="documents"];
  *
  *   build -> foundation [label="pinned build contract"];
- *   build -> mcc [label="planned phase-5 adoption"];
+ *   build -> mcc [label="pinned build contract"];
  *   foundation -> mcc [label="public C++ dependency"];
  *   foundation -> midilar [style=dashed, label="planned base"];
  *   mcc -> midilar [style=dashed, label="planned musical model"];
@@ -40,6 +40,6 @@
  * - MCC contains music theory but no MIDI protocol or device behavior.
  * - MIDILAR owns MIDI and higher-level real-time music-system behavior.
  * - RoModularBuild may provide build mechanics but never project policy.
+ *   runtime dependency.
  * - RoModular documents every layer but is not a build or runtime dependency.
  */
-

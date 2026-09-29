@@ -1,2 +1,0 @@
-# RoModular workspace instructions
-

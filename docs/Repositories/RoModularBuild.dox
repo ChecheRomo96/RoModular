@@ -7,14 +7,13 @@
  * | ----- | ----- |
  * | Role | Project-independent CMake, toolchain, workflow, and CI mechanics |
  * | Current validated release | `v0.4.0` |
- * | Status | Active; validated by Foundation, second-consumer adoption pending |
+ * | Status | Active; validated by Foundation and MCC |
  * | Source | [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild) |
  * | Documentation | [Documentation directory](https://github.com/ChecheRomo96/RoModularBuild/tree/v0.4.0/docs) |
- * | Consumers | Foundation; MCC is the next acceptance consumer |
+ * | Consumers | Foundation and MCC |
  *
  * RoModularBuild defines reusable compiler, architecture, ABI, preset-base,
  * lifecycle, and cross-platform CI behavior. Consumers pin an exact tag or
  * commit. Public preset names, feature options, examples, packages, firmware,
  * artifacts, hardware evidence, and release policy stay in each consumer.
  */
-

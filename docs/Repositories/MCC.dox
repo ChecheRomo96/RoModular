@@ -14,8 +14,7 @@
  * | Public CMake target | `MCC::MCC` |
  *
  * MCC owns music theory and composition semantics, not MIDI. It consumes
- * Foundation only through the public `Foundation::Foundation` target. Adoption
- * of the same pinned RoModularBuild release is the next cross-repository
- * infrastructure acceptance step.
+ * Foundation only through the public `Foundation::Foundation` target and uses
+ * the same pinned RoModularBuild `v0.4.0` release already validated by
+ * Foundation.
  */
-
