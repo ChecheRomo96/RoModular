@@ -1,0 +1,24 @@
+/**
+ * @mainpage RoModular
+ *
+ * RoModular is a family of focused C++ repositories for portable software,
+ * embedded systems, music theory, and music technology. This site is the
+ * ecosystem-level map: it explains what each repository owns, how repositories
+ * depend on one another, and which projects are stable, active, planned, or
+ * retained only as legacy references.
+ *
+ * @section RoModularMainStart Start Here
+ *
+ * - @ref RoModular_Ecosystem_Overview explains the scope and ownership model.
+ * - @ref RoModular_Ecosystem_Architecture shows the dependency boundaries.
+ * - @ref RoModular_Repositories links every repository and its own documentation.
+ * - @ref RoModular_Governance_Status defines current maturity and next steps.
+ *
+ * @section RoModularMainPrinciple One Portal, Independent Repositories
+ *
+ * This portal does not replace repository documentation. Each project remains
+ * the source of truth for its API, build procedure, supported targets, tests,
+ * packages, and releases. RoModular records only ecosystem-level ownership,
+ * dependencies, compatibility, and navigation.
+ */
+

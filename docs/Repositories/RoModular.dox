@@ -1,0 +1,18 @@
+/**
+ * @defgroup RoModular_Repositories_Portal RoModular
+ * @ingroup RoModular_Repositories
+ * @brief Ecosystem documentation and navigation portal.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Role | Ecosystem-level documentation and repository catalog |
+ * | Current version | `0.1.0` |
+ * | Status | Initial construction |
+ * | Source | [ChecheRomo96/RoModular](https://github.com/ChecheRomo96/RoModular) |
+ * | Documentation | [RoModular on GitHub Pages](https://checheromo96.github.io/RoModular/) |
+ * | Runtime dependency | None |
+ *
+ * This repository contains no product source code and produces no library.
+ * Its output is this Doxygen site.
+ */
+

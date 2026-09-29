@@ -1,0 +1,21 @@
+/**
+ * @defgroup RoModular_Repositories_Foundation Foundation
+ * @ingroup RoModular_Repositories
+ * @brief Portable C++ base library for desktop and embedded consumers.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Role | General-purpose types, containers, math, time, callbacks, scheduling, and utilities |
+ * | Current release | `v1.2.0` |
+ * | Status | Stable 1.x foundation layer |
+ * | Source | [ChecheRomo96/Foundation](https://github.com/ChecheRomo96/Foundation) |
+ * | Documentation | [Foundation on GitHub Pages](https://checheromo96.github.io/Foundation/) |
+ * | Build infrastructure | RoModularBuild `v0.4.0` |
+ * | Public CMake target | `Foundation::Foundation` |
+ *
+ * Foundation is the lowest runtime layer currently shared by RoModular
+ * libraries. It targets desktop and embedded systems without depending on any
+ * music-domain repository. Its own documentation is authoritative for API,
+ * platform support, packages, examples, testing, and known limitations.
+ */
+

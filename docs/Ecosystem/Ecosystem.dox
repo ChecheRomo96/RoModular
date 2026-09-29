@@ -1,0 +1,28 @@
+/**
+ * @defgroup RoModular_Ecosystem Ecosystem
+ * @brief Purpose, boundaries, and dependency architecture of RoModular.
+ */
+
+/**
+ * @defgroup RoModular_Ecosystem_Overview Overview
+ * @ingroup RoModular_Ecosystem
+ * @brief What RoModular is and what belongs at the ecosystem level.
+ *
+ * RoModular organizes reusable software as small repositories with explicit
+ * responsibilities. A repository should own one coherent domain and expose a
+ * stable public contract to its consumers. Shared build mechanics belong in
+ * RoModularBuild; project policy remains in the repository that owns the
+ * resulting package.
+ *
+ * The ecosystem portal owns:
+ *
+ * - the catalog of repositories;
+ * - the high-level dependency map;
+ * - project maturity and compatibility status;
+ * - links to source, API documentation, releases, and roadmaps; and
+ * - cross-repository architectural decisions.
+ *
+ * It does not own library APIs, compiler flags, target support claims, package
+ * contents, or release evidence. Those facts remain in the affected project.
+ */
+

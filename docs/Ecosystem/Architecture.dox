@@ -1,0 +1,45 @@
+/**
+ * @defgroup RoModular_Ecosystem_Architecture Architecture
+ * @ingroup RoModular_Ecosystem
+ * @brief Current and planned relationships between RoModular repositories.
+ *
+ * @dot
+ * digraph RoModularArchitecture {
+ *   graph [rankdir=TB, bgcolor="transparent", pad="0.25", nodesep="0.55", ranksep="0.75"];
+ *   node [shape=box, style="rounded,filled", color="#39557a", fillcolor="#eef4ff", fontname="Helvetica"];
+ *   edge [color="#52677f", fontname="Helvetica", fontsize=10];
+ *
+ *   portal [label="RoModular\necosystem documentation", fillcolor="#dce9ff"];
+ *   build [label="RoModularBuild\nbuild and CI infrastructure"];
+ *   foundation [label="Foundation\nportable C++ base library"];
+ *   mcc [label="MusicCompositionCore (MCC)\nmusic-theory library"];
+ *   midilar [label="MIDILAR\nMIDI and music systems", style="rounded,dashed,filled", fillcolor="#f5f5f5"];
+ *
+ *   portal -> build [style=dotted, label="documents"];
+ *   portal -> foundation [style=dotted, label="documents"];
+ *   portal -> mcc [style=dotted, label="documents"];
+ *   portal -> midilar [style=dotted, label="documents"];
+ *
+ *   build -> foundation [label="pinned build contract"];
+ *   build -> mcc [label="planned phase-5 adoption"];
+ *   foundation -> mcc [label="public C++ dependency"];
+ *   foundation -> midilar [style=dashed, label="planned base"];
+ *   mcc -> midilar [style=dashed, label="planned musical model"];
+ * }
+ * @enddot
+ *
+ * Solid arrows describe validated relationships. Dashed arrows describe the
+ * intended direction for work that has not yet passed its repository-specific
+ * acceptance gates. Dotted arrows mean that this portal catalogs a project;
+ * they do not imply a source or package dependency.
+ *
+ * @section RoModularArchitectureRules Dependency Rules
+ *
+ * - Libraries depend downward on smaller, more general libraries.
+ * - Foundation contains no music-domain concepts.
+ * - MCC contains music theory but no MIDI protocol or device behavior.
+ * - MIDILAR owns MIDI and higher-level real-time music-system behavior.
+ * - RoModularBuild may provide build mechanics but never project policy.
+ * - RoModular documents every layer but is not a build or runtime dependency.
+ */
+

@@ -1,0 +1,95 @@
+name: Validate and Deploy Documentation
+
+env:
+  DOXYGEN_VERSION: "1.14.0"
+  DOXYGEN_RELEASE: "Release_1_14_0"
+  DOXYGEN_LINUX_SHA256: "e5d6ae24d0bf3f0cdc4d8f146726b89ca323922f19441af99b1872d503665ad6"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: documentation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-docs:
+    name: Validate Doxygen
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install documentation toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install --yes graphviz
+
+          archive="$RUNNER_TEMP/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz"
+          curl --fail --location --silent --show-error \
+            "https://github.com/doxygen/doxygen/releases/download/${DOXYGEN_RELEASE}/doxygen-${DOXYGEN_VERSION}.linux.bin.tar.gz" \
+            --output "$archive"
+          echo "${DOXYGEN_LINUX_SHA256}  ${archive}" | sha256sum --check
+          tar --extract --gzip --file "$archive" --directory "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/doxygen-${DOXYGEN_VERSION}/bin" >> "$GITHUB_PATH"
+
+      - name: Build documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p build/ci-logs
+          doxygen docs/Doxyfile 2>&1 | tee build/ci-logs/documentation.log
+
+      - name: Upload documentation failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: failure-documentation-${{ github.run_attempt }}
+          path: build/ci-logs/documentation.log
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload validated documentation
+        uses: actions/upload-artifact@v7
+        with:
+          name: romodular-documentation
+          path: build/html
+          if-no-files-found: error
+          retention-days: 7
+
+  deploy-docs:
+    name: Deploy GitHub Pages
+    if: github.event_name == 'push'
+    needs: validate-docs
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download validated documentation
+        uses: actions/download-artifact@v7
+        with:
+          name: romodular-documentation
+          path: build/html
+
+      - name: Deploy to docs branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: docs
+          publish_dir: build/html
+          force_orphan: true

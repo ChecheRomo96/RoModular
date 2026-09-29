@@ -1,0 +1,20 @@
+/**
+ * @defgroup RoModular_Repositories_MIDILAR MIDILAR
+ * @ingroup RoModular_Repositories
+ * @brief MIDI protocol, processing, and higher-level real-time music systems.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Intended role | MIDI protocol, routing, processing, and DSP-facing application infrastructure |
+ * | Status | Legacy implementation under assessment; RoModular reconstruction not started |
+ * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR) |
+ * | Legacy documentation | [MIDILAR on GitHub Pages](https://checheromo96.github.io/MIDILAR/) |
+ * | Planned lower layers | Foundation and MCC, subject to a future architecture audit |
+ *
+ * The existing repository is valuable reference material but is not yet a
+ * validated consumer of the current Foundation, MCC, or RoModularBuild
+ * contracts. Its eventual decomposition and migration must be designed and
+ * tested separately; this portal does not advertise the legacy checkout as a
+ * stable RoModular release.
+ */
+

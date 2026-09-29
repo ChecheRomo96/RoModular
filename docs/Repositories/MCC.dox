@@ -1,0 +1,21 @@
+/**
+ * @defgroup RoModular_Repositories_MCC Music Composition Core (MCC)
+ * @ingroup RoModular_Repositories
+ * @brief Portable music-theory and composition primitives.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Role | Pitch, interval, tuning, and future music-composition domain models |
+ * | Current development version | `0.1.0` |
+ * | Status | Active reconstruction |
+ * | Source | [ChecheRomo96/MusicCompositionCore](https://github.com/ChecheRomo96/MusicCompositionCore) |
+ * | Documentation | [MusicCompositionCore on GitHub Pages](https://checheromo96.github.io/MusicCompositionCore/) |
+ * | Runtime dependency | Foundation `1.2.0` or a compatible newer 1.x release |
+ * | Public CMake target | `MCC::MCC` |
+ *
+ * MCC owns music theory and composition semantics, not MIDI. It consumes
+ * Foundation only through the public `Foundation::Foundation` target. Adoption
+ * of the same pinned RoModularBuild release is the next cross-repository
+ * infrastructure acceptance step.
+ */
+

@@ -1,0 +1,38 @@
+/**
+ * @defgroup RoModular_Governance Governance
+ * @brief Status vocabulary and documentation ownership across the ecosystem.
+ */
+
+/**
+ * @defgroup RoModular_Governance_Status Repository Status
+ * @ingroup RoModular_Governance
+ * @brief Maturity definitions and the current ecosystem snapshot.
+ *
+ * @section RoModularStatusDefinitions Status Definitions
+ *
+ * | Status | Meaning |
+ * | ------ | ------- |
+ * | Stable | Published contract with repeatable validation and release evidence |
+ * | Active | Under development with an explicit contract and acceptance plan |
+ * | Planned | Intended repository or relationship not yet validated |
+ * | Legacy | Retained as reference; current compatibility is not promised |
+ * | Archived | No active development and no compatibility commitment |
+ *
+ * @section RoModularCurrentStatus Current Snapshot
+ *
+ * | Repository | Status | Next ecosystem milestone |
+ * | ---------- | ------ | ------------------------ |
+ * | RoModular | Active | Publish and maintain the ecosystem portal |
+ * | RoModularBuild | Active | Complete second-consumer adoption from MCC |
+ * | Foundation | Stable | Continue evidence-based 1.x maintenance |
+ * | MusicCompositionCore | Active | Complete reconstruction and consume shared infrastructure |
+ * | MIDILAR | Legacy | Audit boundaries before beginning a clean reconstruction |
+ *
+ * @section RoModularDocumentationOwnership Documentation Ownership
+ *
+ * When a repository changes its API, supported platform, package contract, or
+ * release status, that repository must update its own documentation in the
+ * same change. This portal is updated only when the ecosystem-level summary,
+ * dependency map, status, or navigation link changes.
+ */
+
