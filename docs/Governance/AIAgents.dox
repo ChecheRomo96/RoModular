@@ -40,7 +40,7 @@
  *
  * @dot
  * digraph AgentGuidance {
- *     graph [bgcolor="transparent", rankdir=LR];
+ *     graph [bgcolor="transparent", rankdir=TB];
  *     node [shape=box, style="rounded"];
  *
  *     Repository [label="Repository\nAGENTS.md"];
@@ -111,13 +111,16 @@
  * Workflows complement each repository's checked-in scripts and presets. They
  * do not replace build, test, install, export, or release automation.
  *
+ * Use @ref RoModular_Governance_AIAgents_Workspace to create a complete local
+ * checkout and the workspace-level entry point consumed by compatible agents.
+ *
  * @section RoModularAIAgentsAdoption Adoption Status
  *
  * | Repository | Root adapter | Shared-contract loading |
  * | ---------- | ------------ | ----------------------- |
  * | RoModular | Implemented | Owns the canonical contract |
  * | Foundation | Implemented | Loads the sibling contract conditionally |
- * | MusicCompositionCore | Planned | Not yet integrated |
+ * | MusicCompositionCore | Implemented | Loads the sibling contract conditionally |
  * | MIDILAR | Planned | Pending repository reconstruction |
  * | RoModularBuild | Planned | Not yet integrated |
  *

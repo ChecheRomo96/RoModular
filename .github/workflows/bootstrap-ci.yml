@@ -1,0 +1,47 @@
+name: Validate Workspace Bootstrap
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    name: macOS / POSIX bootstrap
+    runs-on: macos-15
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Validate shell syntax
+        shell: bash
+        run: sh -n scripts/bootstrap-workspace.sh
+
+      - name: Preview workspace setup
+        shell: bash
+        run: ./scripts/bootstrap-workspace.sh --root "$RUNNER_TEMP/RoModularWorkspace" --dry-run
+
+  windows:
+    name: Windows / PowerShell bootstrap
+    runs-on: windows-2025-vs2026
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Preview workspace setup
+        shell: pwsh
+        run: |
+          ./scripts/bootstrap-workspace.ps1 `
+            -Root (Join-Path $env:RUNNER_TEMP "RoModularWorkspace") `
+            -DryRun

@@ -1,0 +1,150 @@
+/**
+ * @defgroup RoModular_Governance_AIAgents_Workspace Workspace Bootstrap
+ * @ingroup RoModular_Governance_AIAgents
+ * @brief Clone the ecosystem and configure a shared Codex or Claude workspace.
+ *
+ * @section RoModularWorkspaceBootstrapPurpose Purpose
+ *
+ * RoModular provides equivalent shell and PowerShell entry points for creating
+ * the complete multi-repository workspace:
+ *
+ * - `scripts/bootstrap-workspace.sh` for macOS and other POSIX environments.
+ * - `scripts/bootstrap-workspace.ps1` for Windows PowerShell.
+ *
+ * Both scripts consume the same repository manifest and install the same
+ * workspace-level Codex and Claude adapters. Platform wrappers contain only
+ * the behavior required by their native shell.
+ *
+ * @section RoModularWorkspaceBootstrapContents Repositories
+ *
+ * The checked-in `.romodular/workspace/repositories.txt` manifest currently
+ * defines these local directories:
+ *
+ * | Directory | Repository |
+ * | --------- | ---------- |
+ * | `RoModular` | Ecosystem portal and governance |
+ * | `RoModularBuild` | Shared build infrastructure |
+ * | `Foundation` | Low-level C++ library |
+ * | `MCC` | Music Composition Core |
+ * | `MIDILAR` | Legacy MIDI and music-technology project |
+ *
+ * Directory names are independent from remote repository names. For example,
+ * the `MCC` directory clones the `MusicCompositionCore` repository.
+ *
+ * @section RoModularWorkspaceBootstrapUsage Usage
+ *
+ * By default, a standalone checkout creates a sibling directory named
+ * `RoModularWorkspace`. When the active RoModular checkout is already inside
+ * an initialized workspace, the script reuses that parent directory. The
+ * destination remains configurable with `--root`, `-Root`, or the
+ * `ROMODULAR_WORKSPACE_ROOT` environment variable.
+ *
+ * The default result is:
+ *
+ * @code{.text}
+ * RoModularWorkspace/
+ * |-- .romodular-workspace
+ * |-- AGENTS.md
+ * |-- .claude/
+ * |   `-- CLAUDE.md
+ * |-- RoModular/
+ * |-- RoModularBuild/
+ * |-- Foundation/
+ * |-- MCC/
+ * `-- MIDILAR/
+ * @endcode
+ *
+ * **macOS:**
+ *
+ * @code{.sh}
+ * ./scripts/bootstrap-workspace.sh
+ * @endcode
+ *
+ * Preview the operation without writing files:
+ *
+ * @code{.sh}
+ * ./scripts/bootstrap-workspace.sh \
+ *   --root "$HOME/Developer/RoModularWorkspace" \
+ *   --dry-run
+ * @endcode
+ *
+ * **Windows PowerShell:**
+ *
+ * @code{.powershell}
+ * ./scripts/bootstrap-workspace.ps1
+ * @endcode
+ *
+ * Preview the Windows operation with `-DryRun`:
+ *
+ * @code{.powershell}
+ * ./scripts/bootstrap-workspace.ps1 `
+ *   -Root "$HOME/Code/RoModularWorkspace" `
+ *   -DryRun
+ * @endcode
+ *
+ * @section RoModularWorkspaceBootstrapBehavior Safe Existing-Checkout Behavior
+ *
+ * For every manifest entry, the scripts:
+ *
+ * 1. Clone a missing repository with its pinned Git submodules.
+ * 2. Verify the `origin` URL when the directory already contains a Git
+ *    worktree.
+ * 3. Leave every existing repository, branch, worktree, submodule, and
+ *    uncommitted change untouched.
+ * 4. Refuse a directory that is not a Git worktree or has an unexpected
+ *    `origin`.
+ *
+ * The bootstrap never runs `pull`, `checkout`, `reset`, `clean`, merge, or
+ * rebase. It is therefore safe to preview against an active development
+ * workspace. A repository that requires synchronization remains an explicit
+ * maintenance decision.
+ *
+ * @section RoModularWorkspaceBootstrapAgents Agent Configuration
+ *
+ * The script installs two provider adapters backed by the same instructions:
+ *
+ * - `AGENTS.md` at the workspace root is the Codex-compatible entry point.
+ * - `.claude/CLAUDE.md` is the Claude Code entry point and imports the root
+ *   `AGENTS.md` instead of duplicating its contents.
+ *
+ * The shared entry point instructs an agent to load the canonical RoModular
+ * contract and then the adapter belonging to each repository placed in scope.
+ *
+ * Existing workspace instructions are never overwritten silently. When a
+ * different adapter already exists, the operation fails and preserves it.
+ * `--force-config` on macOS or `-ForceConfig` on Windows is required to replace
+ * either file deliberately.
+ *
+ * When the `codex` executable is available, the script prints the detected
+ * version and the workspace launch command:
+ *
+ * @code{.sh}
+ * codex -C "/path/to/RoModularWorkspace"
+ * @endcode
+ *
+ * When `claude` is available, it prints the equivalent command launched from
+ * the workspace root. Claude Code discovers `.claude/CLAUDE.md`, which uses
+ * its supported `@path` import syntax to load `AGENTS.md`.
+ *
+ * The bootstrap does not install Codex or Claude Code, sign into either
+ * service, modify user-level configuration, or store credentials. A missing
+ * optional agent is reported without making repository setup fail.
+ *
+ * @section RoModularWorkspaceBootstrapOptions Options
+ *
+ * | macOS | Windows | Meaning |
+ * | ----- | ------- | ------- |
+ * | `--root <path>` | `-Root <path>` | Override the default `RoModularWorkspace` root |
+ * | `--manifest <path>` | `-Manifest <path>` | Use an alternate repository manifest |
+ * | `--force-config` | `-ForceConfig` | Replace differing workspace instructions |
+ * | `--dry-run` | `-DryRun` | Preview without filesystem changes |
+ *
+ * The `ROMODULAR_WORKSPACE_ROOT` environment variable supplies the root when
+ * the corresponding command-line option is omitted.
+ *
+ * @section RoModularWorkspaceBootstrapReferences Agent Runtime References
+ *
+ * - <a href="https://developers.openai.com/api/docs/guides/latest-model#using-agentsmd">Codex `AGENTS.md` discovery</a>
+ * - <a href="https://code.claude.com/docs/en/claude-directory">Claude Code project instruction files</a>
+ * - <a href="https://docs.anthropic.com/en/docs/claude-code/memory#claude-md-imports">Claude Code instruction imports</a>
+ */
