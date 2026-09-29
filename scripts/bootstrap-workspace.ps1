@@ -70,6 +70,13 @@ if (-not (Test-Path -LiteralPath $Manifest -PathType Leaf)) {
     throw "Repository manifest not found: $Manifest"
 }
 
+function Normalize-GitOrigin {
+    param([Parameter(Mandatory = $true)][string]$Origin)
+
+    $Normalized = $Origin.Trim().TrimEnd("/")
+    return ($Normalized -replace '\.git$', '')
+}
+
 Write-Host "RoModular workspace: $WorkspaceRoot"
 
 if ($DryRun) {
@@ -120,7 +127,15 @@ foreach ($Line in Get-Content -LiteralPath $Manifest) {
         }
 
         $ActualOrigin = (& git -C $RepositoryPath remote get-url origin 2>$null)
-        if ($LASTEXITCODE -ne 0 -or $ActualOrigin.Trim() -ne $RepositoryOrigin) {
+        $NormalizedActualOrigin = if ($ActualOrigin) {
+            Normalize-GitOrigin -Origin $ActualOrigin
+        }
+        else {
+            ""
+        }
+        $NormalizedExpectedOrigin = Normalize-GitOrigin -Origin $RepositoryOrigin
+        if ($LASTEXITCODE -ne 0 -or
+            $NormalizedActualOrigin -ne $NormalizedExpectedOrigin) {
             $DisplayedOrigin = if ($ActualOrigin) { $ActualOrigin.Trim() } else { "<missing>" }
             Write-Error (
                 "$RepositoryName has unexpected origin: $DisplayedOrigin; " +

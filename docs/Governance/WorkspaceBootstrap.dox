@@ -93,7 +93,8 @@
  *
  * 1. Clone a missing repository with its pinned Git submodules.
  * 2. Verify the `origin` URL when the directory already contains a Git
- *    worktree.
+ *    worktree. The equivalent HTTPS forms with or without a trailing `.git`
+ *    suffix are accepted.
  * 3. Leave every existing repository, branch, worktree, submodule, and
  *    uncommitted change untouched.
  * 4. Refuse a directory that is not a Git worktree or has an unexpected

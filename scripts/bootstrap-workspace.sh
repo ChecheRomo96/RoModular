@@ -38,6 +38,10 @@ fail() {
     exit 1
 }
 
+normalize_git_origin() {
+    printf '%s' "$1" | sed -e 's#/*$##' -e 's#\.git$##'
+}
+
 while [ "$#" -gt 0 ]; do
     case "$1" in
         --root)
@@ -120,7 +124,9 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
         fi
 
         ACTUAL_ORIGIN=$(git -C "$REPOSITORY_PATH" remote get-url origin 2>/dev/null || true)
-        if [ "$ACTUAL_ORIGIN" != "$REPOSITORY_ORIGIN" ]; then
+        NORMALIZED_ACTUAL_ORIGIN=$(normalize_git_origin "$ACTUAL_ORIGIN")
+        NORMALIZED_EXPECTED_ORIGIN=$(normalize_git_origin "$REPOSITORY_ORIGIN")
+        if [ "$NORMALIZED_ACTUAL_ORIGIN" != "$NORMALIZED_EXPECTED_ORIGIN" ]; then
             printf 'error: %s has unexpected origin: %s\n' \
                 "$REPOSITORY_NAME" "${ACTUAL_ORIGIN:-<missing>}" >&2
             printf '       expected: %s\n' "$REPOSITORY_ORIGIN" >&2
