@@ -27,6 +27,7 @@
  * | Foundation | Stable | Continue evidence-based 1.x maintenance |
  * | MusicCompositionCore | Active | Complete reconstruction and consume shared infrastructure |
  * | MIDILAR | Legacy | Audit boundaries before beginning a clean reconstruction |
+ * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |
  *
  * @section RoModularDocumentationOwnership Documentation Ownership
  *
