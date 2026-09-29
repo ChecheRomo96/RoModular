@@ -1,6 +1,6 @@
 /**
  * @defgroup RoModular_Governance Governance
- * @brief Status vocabulary and documentation ownership across the ecosystem.
+ * @brief Status, documentation ownership, and shared operating rules across the ecosystem.
  */
 
 /**
@@ -35,4 +35,3 @@
  * same change. This portal is updated only when the ecosystem-level summary,
  * dependency map, status, or navigation link changes.
  */
-

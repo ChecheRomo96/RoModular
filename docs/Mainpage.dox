@@ -13,6 +13,7 @@
  * - @ref RoModular_Ecosystem_Architecture shows the dependency boundaries.
  * - @ref RoModular_Repositories links every repository and its own documentation.
  * - @ref RoModular_Governance_Status defines current maturity and next steps.
+ * - @ref RoModular_Governance_AIAgents explains the shared AI-agent contract.
  *
  * @section RoModularMainPrinciple One Portal, Independent Repositories
  *
@@ -21,4 +22,3 @@
  * packages, and releases. RoModular records only ecosystem-level ownership,
  * dependencies, compatibility, and navigation.
  */
-

@@ -1,0 +1,137 @@
+/**
+ * @defgroup RoModular_Governance_AIAgents AI Agent Guidance
+ * @ingroup RoModular_Governance
+ * @brief Provider-neutral instructions for AI-assisted work across RoModular repositories.
+ *
+ * @section RoModularAIAgentsPurpose Purpose
+ *
+ * RoModular uses a shared operating contract so AI coding agents receive the
+ * same architectural boundaries, evidence requirements, and safety rules
+ * regardless of whether the active runtime is Codex, Claude Code, or another
+ * compatible tool.
+ *
+ * The shared documents describe desired behavior. They do not require a
+ * particular model, vendor, or subagent implementation. A runtime may delegate
+ * a role to an isolated subagent or perform that role in the current session.
+ *
+ * @section RoModularAIAgentsStructure Structure
+ *
+ * The RoModular repository contains the canonical shared guidance:
+ *
+ * @code{.text}
+ * RoModular/
+ * |-- AGENTS.md
+ * `-- .romodular/
+ *     |-- CONTRACT.md
+ *     |-- roles/
+ *     |   |-- architecture-auditor.md
+ *     |   |-- documentation-curator.md
+ *     |   |-- release-auditor.md
+ *     |   `-- repository-maintainer.md
+ *     `-- workflows/
+ *         |-- release.md
+ *         `-- repository-audit.md
+ * @endcode
+ *
+ * `AGENTS.md` is intentionally a small router. The `.romodular/` directory is
+ * the source of truth for shared policy, roles, and repeatable workflows.
+ * Provider-specific files are added only when a provider requires behavior
+ * that cannot be expressed by the shared entry point.
+ *
+ * @dot
+ * digraph AgentGuidance {
+ *     graph [bgcolor="transparent", rankdir=LR];
+ *     node [shape=box, style="rounded"];
+ *
+ *     Repository [label="Repository\nAGENTS.md"];
+ *     Contract [label="RoModular\nCONTRACT.md"];
+ *     Roles [label="Bounded roles"];
+ *     Workflows [label="Repeatable workflows"];
+ *     Runtime [label="Codex / Claude /\ncompatible runtime"];
+ *
+ *     Runtime -> Repository [label="discovers"];
+ *     Repository -> Contract [label="loads when available"];
+ *     Contract -> Roles [label="constrains"];
+ *     Contract -> Workflows [label="constrains"];
+ * }
+ * @enddot
+ *
+ * @section RoModularAIAgentsRepositoryAdapters Repository Adapters
+ *
+ * Every independently cloned repository needs a small root `AGENTS.md` because
+ * repositories do not automatically inherit instructions from sibling Git
+ * repositories. The adapter must:
+ *
+ * 1. Look for `../RoModular/.romodular/CONTRACT.md` and read it when available.
+ * 2. Select the applicable shared role and workflow.
+ * 3. Define only the repository-specific purpose, boundaries, supported
+ *    commands, compatibility requirements, and validation rules.
+ * 4. Provide a minimal local fallback when the RoModular sibling is absent.
+ * 5. Report when shared guidance could not be loaded.
+ *
+ * The relative sibling path is a convenience for the standard local checkout:
+ *
+ * @code{.text}
+ * GitHub/
+ * |-- Foundation/
+ * |-- MCC/
+ * |-- MIDILAR/
+ * |-- RoModular/
+ * `-- RoModularBuild/
+ * @endcode
+ *
+ * A standalone clone remains usable because its adapter contains the essential
+ * local rules. Shared guidance never expands the repositories or actions that
+ * the user placed in scope.
+ *
+ * @section RoModularAIAgentsRoles Roles
+ *
+ * | Role | Responsibility | Default authority |
+ * | ---- | -------------- | ----------------- |
+ * | Architecture Auditor | Repository ownership, dependency direction, and shared boundaries | Read-only |
+ * | Repository Maintainer | Focused implementation and proportional validation | Changes requested by the user |
+ * | Release Auditor | Version, CI, package, API, documentation, and release evidence | Read-only |
+ * | Documentation Curator | Accuracy, navigation, status language, and rendered documentation | Documentation changes requested by the user |
+ *
+ * A role defines responsibility and expected evidence; it is not permission to
+ * modify additional repositories, commit, push, tag, merge, publish, or release.
+ * Those actions still require explicit user authorization.
+ *
+ * @section RoModularAIAgentsWorkflows Workflows
+ *
+ * The initial workflow set contains:
+ *
+ * - **Repository audit:** inspect repository state, declared contracts,
+ *   implementation evidence, documentation claims, risks, and ordered next
+ *   actions.
+ * - **Release readiness:** verify versioning, API changes, tests, packages,
+ *   documentation, CI, platform evidence, and hardware-validation boundaries
+ *   before recommending whether a release is ready.
+ *
+ * Workflows complement each repository's checked-in scripts and presets. They
+ * do not replace build, test, install, export, or release automation.
+ *
+ * @section RoModularAIAgentsAdoption Adoption Status
+ *
+ * | Repository | Root adapter | Shared-contract loading |
+ * | ---------- | ------------ | ----------------------- |
+ * | RoModular | Implemented | Owns the canonical contract |
+ * | Foundation | Implemented | Loads the sibling contract conditionally |
+ * | MusicCompositionCore | Planned | Not yet integrated |
+ * | MIDILAR | Planned | Pending repository reconstruction |
+ * | RoModularBuild | Planned | Not yet integrated |
+ *
+ * This table describes instruction integration, not repository maturity. See
+ * @ref RoModular_Governance_Status for the ecosystem status vocabulary.
+ *
+ * @section RoModularAIAgentsLimitations Limitations and Future Distribution
+ *
+ * The sibling lookup works well in the standard local workspace but cannot be
+ * assumed in CI, cloud workspaces, or standalone clones. The local fallback is
+ * therefore mandatory.
+ *
+ * A future portable RoModular agent package may distribute shared skills and
+ * workflows to supported runtimes. Until that package has an installation,
+ * versioning, and update policy, `.romodular/` remains the canonical source and
+ * repository adapters remain deliberately small.
+ */
