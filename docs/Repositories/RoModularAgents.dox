@@ -1,0 +1,18 @@
+/**
+ * @defgroup RoModular_Repositories_Agents RoModularAgents
+ * @ingroup RoModular_Repositories
+ * @brief Provider-neutral agent contracts, repository adapters, and reusable skills.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Role | Shared AI-assisted engineering guidance and Agent Skills |
+ * | Initial version | `0.1.0` |
+ * | Status | Active; workspace integration in progress |
+ * | Source | [ChecheRomo96/RoModularAgents](https://github.com/ChecheRomo96/RoModularAgents) |
+ * | Consumers | RoModular, RoModularBuild, Foundation, MCC, and MIDILAR |
+ *
+ * RoModularAgents is not a source, build, or runtime dependency. It provides a
+ * common operating contract, bounded roles, repository ownership adapters,
+ * and reusable `SKILL.md` workflows. The workspace bootstrap installs the same
+ * canonical skill bundles for Codex and Claude Code.
+ */

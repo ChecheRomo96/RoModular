@@ -23,6 +23,7 @@
  * | Directory | Repository |
  * | --------- | ---------- |
  * | `RoModular` | Ecosystem portal and governance |
+ * | `RoModularAgents` | Provider-neutral agent contracts, adapters, and skills |
  * | `RoModularBuild` | Shared build infrastructure |
  * | `Foundation` | Low-level C++ library |
  * | `MCC` | Music Composition Core |
@@ -45,9 +46,13 @@
  * RoModularWorkspace/
  * |-- .romodular-workspace
  * |-- AGENTS.md
+ * |-- .codex/
+ * |   `-- skills/
  * |-- .claude/
- * |   `-- CLAUDE.md
+ * |   |-- CLAUDE.md
+ * |   `-- skills/
  * |-- RoModular/
+ * |-- RoModularAgents/
  * |-- RoModularBuild/
  * |-- Foundation/
  * |-- MCC/
@@ -101,19 +106,24 @@
  *
  * @section RoModularWorkspaceBootstrapAgents Agent Configuration
  *
- * The script installs two provider adapters backed by the same instructions:
+ * The script installs two provider adapters and two discovery views backed by
+ * the same canonical instructions:
  *
  * - `AGENTS.md` at the workspace root is the Codex-compatible entry point.
  * - `.claude/CLAUDE.md` is the Claude Code entry point and imports the root
  *   `AGENTS.md` instead of duplicating its contents.
+ * - `.codex/skills/` contains generated Codex-discoverable copies.
+ * - `.claude/skills/` contains generated Claude-discoverable copies.
  *
- * The shared entry point instructs an agent to load the canonical RoModular
- * contract and then the adapter belonging to each repository placed in scope.
+ * Templates and skills are sourced from the cloned `RoModularAgents`
+ * repository. The shared entry point loads its canonical contract and the
+ * adapter belonging to each repository placed in scope.
  *
  * Existing workspace instructions are never overwritten silently. When a
  * different adapter already exists, the operation fails and preserves it.
  * `--force-config` on macOS or `-ForceConfig` on Windows is required to replace
- * either file deliberately.
+ * either file or generated skill bundle deliberately. Canonical skills are
+ * edited only under `RoModularAgents/skills/`.
  *
  * When the `codex` executable is available, the script prints the detected
  * version and the workspace launch command:
@@ -136,7 +146,7 @@
  * | ----- | ------- | ------- |
  * | `--root <path>` | `-Root <path>` | Override the default `RoModularWorkspace` root |
  * | `--manifest <path>` | `-Manifest <path>` | Use an alternate repository manifest |
- * | `--force-config` | `-ForceConfig` | Replace differing workspace instructions |
+ * | `--force-config` | `-ForceConfig` | Replace differing workspace instructions and generated skills |
  * | `--dry-run` | `-DryRun` | Preview without filesystem changes |
  *
  * The `ROMODULAR_WORKSPACE_ROOT` environment variable supplies the root when
@@ -144,7 +154,7 @@
  *
  * @section RoModularWorkspaceBootstrapReferences Agent Runtime References
  *
- * - <a href="https://developers.openai.com/api/docs/guides/latest-model#using-agentsmd">Codex `AGENTS.md` discovery</a>
- * - <a href="https://code.claude.com/docs/en/claude-directory">Claude Code project instruction files</a>
- * - <a href="https://docs.anthropic.com/en/docs/claude-code/memory#claude-md-imports">Claude Code instruction imports</a>
+ * - <a href="https://developers.openai.com/api/docs/guides/tools-skills">OpenAI Agent Skills</a>
+ * - <a href="https://code.claude.com/docs/en/skills">Claude Code skills</a>
+ * - <a href="https://code.claude.com/docs/en/memory">Claude Code instruction imports</a>
  */

@@ -1,19 +1,19 @@
 # RoModular agent instructions
 
-This file is the provider-neutral entry point for AI coding agents working in
-the RoModular ecosystem.
+When the sibling `../RoModularAgents` repository is available, read these
+files before changing this repository:
 
-Before changing this repository:
+1. `../RoModularAgents/AGENTS.md`
+2. `../RoModularAgents/CONTRACT.md`
+3. `../RoModularAgents/repositories/RoModular.md`
 
-1. Read `.romodular/CONTRACT.md` completely.
-2. Select and read the role that matches the request:
-   - Architecture and dependency boundaries: `.romodular/roles/architecture-auditor.md`
-   - Repository maintenance: `.romodular/roles/repository-maintainer.md`
-   - Release readiness: `.romodular/roles/release-auditor.md`
-   - Documentation: `.romodular/roles/documentation-curator.md`
-3. When the task matches one of them, follow the applicable procedure under
-   `.romodular/workflows/`.
+Use the relevant skill under `../RoModularAgents/skills/` when the request
+matches one. Shared guidance does not expand the user's requested scope.
 
-Role documents describe responsibilities; they do not require a particular
-agent runtime. If isolated subagents are unavailable or unnecessary, perform
-the selected role in the current session.
+If RoModularAgents is unavailable, keep this repository limited to ecosystem
+documentation and workspace orchestration. Verify claims against the
+repository that owns the behavior, preserve Doxygen navigation, and keep the
+shell and PowerShell bootstrap interfaces aligned.
+
+Do not modify sibling repositories or commit, tag, push, publish, merge, or
+create releases unless the user explicitly requests the action.

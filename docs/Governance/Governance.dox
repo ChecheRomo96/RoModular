@@ -23,9 +23,10 @@
  * | Repository | Status | Next ecosystem milestone |
  * | ---------- | ------ | ------------------------ |
  * | RoModular | Active | Publish and maintain the ecosystem portal |
- * | RoModularBuild | Active | Complete second-consumer adoption from MCC |
+ * | RoModularAgents | Active | Publish the canonical guidance and validate workspace installation on macOS and Windows |
+ * | RoModularBuild | Active | Stabilize the shared profiles already consumed by Foundation and MCC |
  * | Foundation | Stable | Continue evidence-based 1.x maintenance |
- * | MusicCompositionCore | Active | Complete reconstruction and consume shared infrastructure |
+ * | MusicCompositionCore | Active | Continue the reconstruction on its validated Foundation and RoModularBuild baseline |
  * | MIDILAR | Legacy | Audit boundaries before beginning a clean reconstruction |
  * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |
  *

@@ -16,27 +16,23 @@
  *
  * @section RoModularAIAgentsStructure Structure
  *
- * The RoModular repository contains the canonical shared guidance:
+ * The RoModularAgents repository contains the canonical shared guidance:
  *
  * @code{.text}
- * RoModular/
+ * RoModularAgents/
  * |-- AGENTS.md
- * `-- .romodular/
- *     |-- CONTRACT.md
- *     |-- roles/
- *     |   |-- architecture-auditor.md
- *     |   |-- documentation-curator.md
- *     |   |-- release-auditor.md
- *     |   `-- repository-maintainer.md
- *     `-- workflows/
- *         |-- release.md
- *         `-- repository-audit.md
+ * |-- CONTRACT.md
+ * |-- repositories/
+ * |-- roles/
+ * |-- workflows/
+ * |-- skills/
+ * `-- workspace/
  * @endcode
  *
- * `AGENTS.md` is intentionally a small router. The `.romodular/` directory is
- * the source of truth for shared policy, roles, and repeatable workflows.
- * Provider-specific files are added only when a provider requires behavior
- * that cannot be expressed by the shared entry point.
+ * `AGENTS.md` is intentionally a small router. `CONTRACT.md`, `repositories/`,
+ * `roles/`, `workflows/`, and `skills/` are the source of truth. The same
+ * `SKILL.md` bundles follow the open Agent Skills format understood by Codex,
+ * Claude Code, and other compatible runtimes.
  *
  * @dot
  * digraph AgentGuidance {
@@ -44,15 +40,17 @@
  *     node [shape=box, style="rounded"];
  *
  *     Repository [label="Repository\nAGENTS.md"];
- *     Contract [label="RoModular\nCONTRACT.md"];
+ *     Contract [label="RoModularAgents\nCONTRACT.md"];
+ *     Adapter [label="Repository adapter"];
  *     Roles [label="Bounded roles"];
- *     Workflows [label="Repeatable workflows"];
+ *     Skills [label="Reusable skills"];
  *     Runtime [label="Codex / Claude /\ncompatible runtime"];
  *
  *     Runtime -> Repository [label="discovers"];
  *     Repository -> Contract [label="loads when available"];
+ *     Contract -> Adapter [label="bounds ownership"];
  *     Contract -> Roles [label="constrains"];
- *     Contract -> Workflows [label="constrains"];
+ *     Roles -> Skills [label="guide"];
  * }
  * @enddot
  *
@@ -62,11 +60,12 @@
  * repositories do not automatically inherit instructions from sibling Git
  * repositories. The adapter must:
  *
- * 1. Look for `../RoModular/.romodular/CONTRACT.md` and read it when available.
- * 2. Select the applicable shared role and workflow.
- * 3. Define only the repository-specific purpose, boundaries, supported
- *    commands, compatibility requirements, and validation rules.
- * 4. Provide a minimal local fallback when the RoModular sibling is absent.
+ * 1. Look for `../RoModularAgents/` and read its `AGENTS.md`, `CONTRACT.md`, and
+ *    matching repository adapter when available.
+ * 2. Use the applicable shared skill for a repeatable workflow.
+ * 3. Retain a complete local fallback for standalone clones.
+ * 4. Define only repository-specific purpose, boundaries, supported commands,
+ *    compatibility requirements, and validation rules locally.
  * 5. Report when shared guidance could not be loaded.
  *
  * The relative sibling path is a convenience for the standard local checkout:
@@ -77,6 +76,7 @@
  * |-- MCC/
  * |-- MIDILAR/
  * |-- RoModular/
+ * |-- RoModularAgents/
  * `-- RoModularBuild/
  * @endcode
  *
@@ -118,23 +118,24 @@
  *
  * | Repository | Root adapter | Shared-contract loading |
  * | ---------- | ------------ | ----------------------- |
- * | RoModular | Implemented | Owns the canonical contract |
- * | Foundation | Implemented | Loads the sibling contract conditionally |
- * | MusicCompositionCore | Implemented | Loads the sibling contract conditionally |
- * | MIDILAR | Planned | Pending repository reconstruction |
- * | RoModularBuild | Planned | Not yet integrated |
+ * | RoModularAgents | Implemented | Owns the canonical contract, adapters, and skills |
+ * | RoModular | Implemented | Loads the sibling guidance conditionally |
+ * | Foundation | Implemented | Loads the sibling guidance conditionally |
+ * | MusicCompositionCore | Implemented | Loads the sibling guidance conditionally |
+ * | MIDILAR | Implemented | Loads guidance while retaining a legacy fallback |
+ * | RoModularBuild | Implemented | Loads the sibling guidance conditionally |
  *
  * This table describes instruction integration, not repository maturity. See
  * @ref RoModular_Governance_Status for the ecosystem status vocabulary.
  *
- * @section RoModularAIAgentsLimitations Limitations and Future Distribution
+ * @section RoModularAIAgentsDistribution Skill Distribution
  *
- * The sibling lookup works well in the standard local workspace but cannot be
- * assumed in CI, cloud workspaces, or standalone clones. The local fallback is
- * therefore mandatory.
+ * The workspace bootstrap copies canonical bundles from
+ * `RoModularAgents/skills/` into `.codex/skills/` and `.claude/skills/`. These
+ * generated copies must not be edited directly. Rerunning the bootstrap with
+ * explicit force replaces them from the canonical source.
  *
- * A future portable RoModular agent package may distribute shared skills and
- * workflows to supported runtimes. Until that package has an installation,
- * versioning, and update policy, `.romodular/` remains the canonical source and
- * repository adapters remain deliberately small.
+ * Sibling lookup cannot be assumed in CI, cloud workspaces, or standalone
+ * clones, so every repository retains a local fallback with its essential
+ * safety and compatibility rules.
  */

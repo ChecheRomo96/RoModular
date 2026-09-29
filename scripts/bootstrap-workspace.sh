@@ -12,8 +12,7 @@ else
     DEFAULT_WORKSPACE_ROOT="$ROMODULAR_PARENT/RoModularWorkspace"
 fi
 DEFAULT_MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
-WORKSPACE_AGENTS_TEMPLATE="$ROMODULAR_ROOT/.romodular/workspace/AGENTS.md"
-WORKSPACE_CLAUDE_TEMPLATE="$ROMODULAR_ROOT/.romodular/workspace/CLAUDE.md"
+AGENT_REPOSITORY_NAME=RoModularAgents
 
 WORKSPACE_ROOT=${ROMODULAR_WORKSPACE_ROOT:-$DEFAULT_WORKSPACE_ROOT}
 MANIFEST=$DEFAULT_MANIFEST
@@ -71,8 +70,6 @@ done
 
 command -v git >/dev/null 2>&1 || fail "Git is required but was not found on PATH"
 [ -f "$MANIFEST" ] || fail "repository manifest not found: $MANIFEST"
-[ -f "$WORKSPACE_AGENTS_TEMPLATE" ] || fail "workspace AGENTS template not found"
-[ -f "$WORKSPACE_CLAUDE_TEMPLATE" ] || fail "workspace CLAUDE template not found"
 
 case "$WORKSPACE_ROOT" in
     /*) ;;
@@ -146,6 +143,22 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
     fi
 done < "$MANIFEST"
 
+AGENT_REPOSITORY_ROOT="$WORKSPACE_ROOT/$AGENT_REPOSITORY_NAME"
+WORKSPACE_AGENTS_TEMPLATE="$AGENT_REPOSITORY_ROOT/workspace/AGENTS.md"
+WORKSPACE_CLAUDE_TEMPLATE="$AGENT_REPOSITORY_ROOT/workspace/CLAUDE.md"
+WORKSPACE_SKILLS_ROOT="$AGENT_REPOSITORY_ROOT/skills"
+
+AGENT_SOURCES_AVAILABLE=1
+if [ ! -f "$WORKSPACE_AGENTS_TEMPLATE" ] || \
+   [ ! -f "$WORKSPACE_CLAUDE_TEMPLATE" ] || \
+   [ ! -d "$WORKSPACE_SKILLS_ROOT" ]; then
+    if [ "$DRY_RUN" -eq 1 ] && [ ! -e "$AGENT_REPOSITORY_ROOT" ]; then
+        AGENT_SOURCES_AVAILABLE=0
+    else
+        fail "canonical workspace templates or skills not found under $AGENT_REPOSITORY_ROOT"
+    fi
+fi
+
 install_workspace_file() {
     SOURCE_FILE=$1
     DESTINATION_FILE=$2
@@ -170,14 +183,64 @@ install_workspace_file() {
     fi
 }
 
-install_workspace_file \
-    "$WORKSPACE_AGENTS_TEMPLATE" \
-    "$WORKSPACE_ROOT/AGENTS.md" \
-    "workspace AGENTS.md"
-install_workspace_file \
-    "$WORKSPACE_CLAUDE_TEMPLATE" \
-    "$WORKSPACE_ROOT/.claude/CLAUDE.md" \
-    "workspace .claude/CLAUDE.md"
+install_workspace_directory() {
+    SOURCE_DIRECTORY=$1
+    DESTINATION_DIRECTORY=$2
+    DISPLAY_NAME=$3
+
+    if [ -e "$DESTINATION_DIRECTORY" ] && [ ! -d "$DESTINATION_DIRECTORY" ]; then
+        printf 'error: %s exists but is not a directory\n' \
+            "$DESTINATION_DIRECTORY" >&2
+        FAILED=1
+    elif [ -d "$DESTINATION_DIRECTORY" ] && \
+         diff -qr "$SOURCE_DIRECTORY" "$DESTINATION_DIRECTORY" >/dev/null 2>&1; then
+        printf 'configured: %s is current\n' "$DISPLAY_NAME"
+    elif [ -e "$DESTINATION_DIRECTORY" ] && [ "$FORCE_CONFIG" -ne 1 ]; then
+        printf 'error: %s already exists and differs from the canonical skill\n' \
+            "$DESTINATION_DIRECTORY" >&2
+        printf '       rerun with --force-config to replace it\n' >&2
+        FAILED=1
+    elif [ "$DRY_RUN" -eq 1 ]; then
+        printf '[dry-run] install %s\n' "$DISPLAY_NAME"
+    else
+        case "$DESTINATION_DIRECTORY" in
+            "$WORKSPACE_ROOT/.codex/skills/"*|"$WORKSPACE_ROOT/.claude/skills/"*) ;;
+            *) fail "refusing unexpected skill destination: $DESTINATION_DIRECTORY" ;;
+        esac
+        rm -rf -- "$DESTINATION_DIRECTORY"
+        mkdir -p "$(dirname -- "$DESTINATION_DIRECTORY")"
+        cp -R "$SOURCE_DIRECTORY" "$DESTINATION_DIRECTORY"
+        printf 'configured: %s\n' "$DESTINATION_DIRECTORY"
+    fi
+}
+
+if [ "$AGENT_SOURCES_AVAILABLE" -eq 1 ]; then
+    install_workspace_file \
+        "$WORKSPACE_AGENTS_TEMPLATE" \
+        "$WORKSPACE_ROOT/AGENTS.md" \
+        "workspace AGENTS.md"
+    install_workspace_file \
+        "$WORKSPACE_CLAUDE_TEMPLATE" \
+        "$WORKSPACE_ROOT/.claude/CLAUDE.md" \
+        "workspace .claude/CLAUDE.md"
+
+    for SOURCE_SKILL in "$WORKSPACE_SKILLS_ROOT"/*; do
+        [ -d "$SOURCE_SKILL" ] || continue
+        SKILL_NAME=$(basename -- "$SOURCE_SKILL")
+        install_workspace_directory \
+            "$SOURCE_SKILL" \
+            "$WORKSPACE_ROOT/.codex/skills/$SKILL_NAME" \
+            "Codex skill $SKILL_NAME"
+        install_workspace_directory \
+            "$SOURCE_SKILL" \
+            "$WORKSPACE_ROOT/.claude/skills/$SKILL_NAME" \
+            "Claude skill $SKILL_NAME"
+    done
+else
+    printf '[dry-run] install workspace AGENTS.md from the planned RoModularAgents checkout\n'
+    printf '[dry-run] install workspace .claude/CLAUDE.md from the planned RoModularAgents checkout\n'
+    printf '[dry-run] install canonical skills into .codex/skills and .claude/skills\n'
+fi
 
 if command -v codex >/dev/null 2>&1; then
     CODEX_VERSION=$(codex --version 2>/dev/null || true)

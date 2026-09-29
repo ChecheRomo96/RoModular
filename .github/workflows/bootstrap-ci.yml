@@ -22,13 +22,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      - name: Checkout canonical agent guidance
+        uses: actions/checkout@v5
+        with:
+          repository: ChecheRomo96/RoModularAgents
+          path: .ci-workspace/RoModularAgents
+
       - name: Validate shell syntax
         shell: bash
         run: sh -n scripts/bootstrap-workspace.sh
 
-      - name: Preview workspace setup
+      - name: Configure test workspace
         shell: bash
-        run: ./scripts/bootstrap-workspace.sh --root "$RUNNER_TEMP/RoModularWorkspace" --dry-run
+        run: |
+          ./scripts/bootstrap-workspace.sh \
+            --root "$GITHUB_WORKSPACE/.ci-workspace" \
+            --manifest "$GITHUB_WORKSPACE/.github/testdata/agent-workspace.txt"
+
+      - name: Verify idempotent configuration
+        shell: bash
+        run: |
+          ./scripts/bootstrap-workspace.sh \
+            --root "$GITHUB_WORKSPACE/.ci-workspace" \
+            --manifest "$GITHUB_WORKSPACE/.github/testdata/agent-workspace.txt"
 
   windows:
     name: Windows / PowerShell bootstrap
@@ -39,9 +55,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Preview workspace setup
+      - name: Checkout canonical agent guidance
+        uses: actions/checkout@v5
+        with:
+          repository: ChecheRomo96/RoModularAgents
+          path: .ci-workspace/RoModularAgents
+
+      - name: Configure test workspace
         shell: pwsh
         run: |
           ./scripts/bootstrap-workspace.ps1 `
-            -Root (Join-Path $env:RUNNER_TEMP "RoModularWorkspace") `
-            -DryRun
+            -Root (Join-Path $env:GITHUB_WORKSPACE ".ci-workspace") `
+            -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/agent-workspace.txt")
+
+      - name: Verify idempotent configuration
+        shell: pwsh
+        run: |
+          ./scripts/bootstrap-workspace.ps1 `
+            -Root (Join-Path $env:GITHUB_WORKSPACE ".ci-workspace") `
+            -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/agent-workspace.txt")

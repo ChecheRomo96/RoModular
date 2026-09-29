@@ -44,8 +44,7 @@ else {
     Join-Path $RoModularParent "RoModularWorkspace"
 }
 $DefaultManifest = Join-Path $RoModularRoot ".romodular/workspace/repositories.txt"
-$WorkspaceAgentsTemplate = Join-Path $RoModularRoot ".romodular/workspace/AGENTS.md"
-$WorkspaceClaudeTemplate = Join-Path $RoModularRoot ".romodular/workspace/CLAUDE.md"
+$AgentRepositoryName = "RoModularAgents"
 
 if ([string]::IsNullOrWhiteSpace($Root)) {
     if ([string]::IsNullOrWhiteSpace($env:ROMODULAR_WORKSPACE_ROOT)) {
@@ -69,13 +68,6 @@ if ($null -eq (Get-Command git -ErrorAction SilentlyContinue)) {
 
 if (-not (Test-Path -LiteralPath $Manifest -PathType Leaf)) {
     throw "Repository manifest not found: $Manifest"
-}
-
-if (-not (Test-Path -LiteralPath $WorkspaceAgentsTemplate -PathType Leaf)) {
-    throw "Workspace AGENTS template not found: $WorkspaceAgentsTemplate"
-}
-if (-not (Test-Path -LiteralPath $WorkspaceClaudeTemplate -PathType Leaf)) {
-    throw "Workspace CLAUDE template not found: $WorkspaceClaudeTemplate"
 }
 
 Write-Host "RoModular workspace: $WorkspaceRoot"
@@ -155,6 +147,21 @@ foreach ($Line in Get-Content -LiteralPath $Manifest) {
     }
 }
 
+$AgentRepositoryRoot = Join-Path $WorkspaceRoot $AgentRepositoryName
+$WorkspaceAgentsTemplate = Join-Path $AgentRepositoryRoot "workspace/AGENTS.md"
+$WorkspaceClaudeTemplate = Join-Path $AgentRepositoryRoot "workspace/CLAUDE.md"
+$WorkspaceSkillsRoot = Join-Path $AgentRepositoryRoot "skills"
+
+$AgentSourcesAvailable =
+    (Test-Path -LiteralPath $WorkspaceAgentsTemplate -PathType Leaf) -and
+    (Test-Path -LiteralPath $WorkspaceClaudeTemplate -PathType Leaf) -and
+    (Test-Path -LiteralPath $WorkspaceSkillsRoot -PathType Container)
+
+if (-not $AgentSourcesAvailable -and
+    (-not $DryRun -or (Test-Path -LiteralPath $AgentRepositoryRoot))) {
+    throw "Canonical workspace templates or skills not found under $AgentRepositoryRoot"
+}
+
 function Install-WorkspaceFile {
     param(
         [Parameter(Mandatory = $true)][string]$Source,
@@ -194,20 +201,102 @@ function Install-WorkspaceFile {
     return $true
 }
 
+function Get-DirectoryFingerprint {
+    param([Parameter(Mandatory = $true)][string]$Path)
+
+    $Root = [System.IO.Path]::GetFullPath($Path)
+    $Entries = Get-ChildItem -LiteralPath $Root -File -Recurse |
+        Sort-Object FullName |
+        ForEach-Object {
+            $RelativePath = [System.IO.Path]::GetRelativePath($Root, $_.FullName)
+            $Hash = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
+            "$RelativePath|$Hash"
+        }
+    return ($Entries -join "`n")
+}
+
+function Install-WorkspaceDirectory {
+    param(
+        [Parameter(Mandatory = $true)][string]$Source,
+        [Parameter(Mandatory = $true)][string]$Destination,
+        [Parameter(Mandatory = $true)][string]$DisplayName
+    )
+
+    $DestinationExists = Test-Path -LiteralPath $Destination
+    $DestinationIsDirectory = Test-Path -LiteralPath $Destination -PathType Container
+
+    if ($DestinationExists -and -not $DestinationIsDirectory) {
+        Write-Error "$Destination exists but is not a directory" -ErrorAction Continue
+        return $false
+    }
+    if ($DestinationIsDirectory -and
+        (Get-DirectoryFingerprint -Path $Source) -ceq
+        (Get-DirectoryFingerprint -Path $Destination)) {
+        Write-Host "configured: $DisplayName is current"
+        return $true
+    }
+    if ($DestinationExists -and -not $ForceConfig) {
+        Write-Error (
+            "$Destination already exists and differs from the canonical skill; " +
+            "rerun with -ForceConfig to replace it"
+        ) -ErrorAction Continue
+        return $false
+    }
+    if ($DryRun) {
+        Write-Host "[dry-run] install $DisplayName"
+        return $true
+    }
+
+    if ($DestinationExists) {
+        Remove-Item -LiteralPath $Destination -Recurse -Force
+    }
+    $DestinationDirectory = Split-Path -Parent $Destination
+    New-Item -ItemType Directory -Path $DestinationDirectory -Force | Out-Null
+    Copy-Item -LiteralPath $Source -Destination $Destination -Recurse
+    Write-Host "configured: $Destination"
+    return $true
+}
+
 $WorkspaceAgents = Join-Path $WorkspaceRoot "AGENTS.md"
 $WorkspaceClaude = Join-Path (Join-Path $WorkspaceRoot ".claude") "CLAUDE.md"
 
-if (-not (Install-WorkspaceFile `
-    -Source $WorkspaceAgentsTemplate `
-    -Destination $WorkspaceAgents `
-    -DisplayName "workspace AGENTS.md")) {
-    $Failed = $true
+if ($AgentSourcesAvailable) {
+    if (-not (Install-WorkspaceFile `
+        -Source $WorkspaceAgentsTemplate `
+        -Destination $WorkspaceAgents `
+        -DisplayName "workspace AGENTS.md")) {
+        $Failed = $true
+    }
+
+    foreach ($SourceSkill in Get-ChildItem -LiteralPath $WorkspaceSkillsRoot -Directory) {
+        $SkillName = $SourceSkill.Name
+        $CodexSkill = Join-Path $WorkspaceRoot ".codex/skills/$SkillName"
+        $ClaudeSkill = Join-Path $WorkspaceRoot ".claude/skills/$SkillName"
+
+        if (-not (Install-WorkspaceDirectory `
+            -Source $SourceSkill.FullName `
+            -Destination $CodexSkill `
+            -DisplayName "Codex skill $SkillName")) {
+            $Failed = $true
+        }
+        if (-not (Install-WorkspaceDirectory `
+            -Source $SourceSkill.FullName `
+            -Destination $ClaudeSkill `
+            -DisplayName "Claude skill $SkillName")) {
+            $Failed = $true
+        }
+    }
+    if (-not (Install-WorkspaceFile `
+        -Source $WorkspaceClaudeTemplate `
+        -Destination $WorkspaceClaude `
+        -DisplayName "workspace .claude/CLAUDE.md")) {
+        $Failed = $true
+    }
 }
-if (-not (Install-WorkspaceFile `
-    -Source $WorkspaceClaudeTemplate `
-    -Destination $WorkspaceClaude `
-    -DisplayName "workspace .claude/CLAUDE.md")) {
-    $Failed = $true
+else {
+    Write-Host "[dry-run] install workspace AGENTS.md from the planned RoModularAgents checkout"
+    Write-Host "[dry-run] install workspace .claude/CLAUDE.md from the planned RoModularAgents checkout"
+    Write-Host "[dry-run] install canonical skills into .codex/skills and .claude/skills"
 }
 
 $CodexCommand = Get-Command codex -ErrorAction SilentlyContinue

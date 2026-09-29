@@ -1,0 +1,2 @@
+# Minimal manifest used by the workspace bootstrap integration test.
+RoModularAgents|https://github.com/ChecheRomo96/RoModularAgents.git
