@@ -8,7 +8,7 @@
  * | Intended role | MIDI protocol, routing, processing, and DSP-facing application infrastructure |
  * | Status | Legacy implementation under assessment; RoModular reconstruction not started |
  * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR) |
- * | Legacy documentation | [MIDILAR on GitHub Pages](https://checheromo96.github.io/MIDILAR/) |
+ * | Legacy documentation | Not published; see the [`docs` directory](https://github.com/ChecheRomo96/MIDILAR/tree/master/docs) in the source repository |
  * | Planned lower layers | Foundation and MCC, subject to a future architecture audit |
  *
  * The existing repository is valuable reference material but is not yet a

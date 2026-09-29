@@ -6,8 +6,8 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Shared AI-assisted engineering guidance and Agent Skills |
- * | Initial version | `0.1.0` |
- * | Status | Active; workspace integration in progress |
+ * | Current version | `0.1.0` |
+ * | Status | Active; installed by the workspace bootstrap validated on macOS and Windows |
  * | Source | [ChecheRomo96/RoModularAgents](https://github.com/ChecheRomo96/RoModularAgents) |
  * | Consumers | RoModular, RoModularBuild, Foundation, MCC, and MIDILAR |
  *
