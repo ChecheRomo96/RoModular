@@ -6,7 +6,7 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Pitch, interval, tuning, and future music-composition domain models |
- * | Current development version | `0.1.0` |
+ * | Current development version | `0.2.0` |
  * | Status | Active reconstruction |
  * | Source | [ChecheRomo96/MusicCompositionCore](https://github.com/ChecheRomo96/MusicCompositionCore) |
  * | Documentation | [MusicCompositionCore on GitHub Pages](https://checheromo96.github.io/MusicCompositionCore/) |
