@@ -5,12 +5,12 @@
  *
  * | Field | Value |
  * | ----- | ----- |
- * | Role | Pitch, interval, tuning, and future music-composition domain models |
- * | Current release | [`v0.2.0`](https://github.com/ChecheRomo96/MusicCompositionCore/releases/tag/v0.2.0) |
+ * | Role | Pitch, interval, tuning, scale, and future music-composition domain models |
+ * | Current release | [`v0.3.0`](https://github.com/ChecheRomo96/MusicCompositionCore/releases/tag/v0.3.0) |
  * | Status | Active reconstruction |
  * | Source | [ChecheRomo96/MusicCompositionCore](https://github.com/ChecheRomo96/MusicCompositionCore) |
  * | Documentation | [MusicCompositionCore on GitHub Pages](https://checheromo96.github.io/MusicCompositionCore/) |
- * | Runtime dependency | Foundation `1.2.0` or a compatible newer 1.x release |
+ * | Runtime dependency | Foundation `1.4.0` or a compatible newer 1.x release |
  * | Public CMake target | `MCC::MCC` |
  *
  * MCC owns music theory and composition semantics, not MIDI. It consumes
