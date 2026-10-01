@@ -77,6 +77,8 @@ command -v git >/dev/null 2>&1 || fail "Git is required but was not found on PAT
 
 case "$WORKSPACE_ROOT" in
     /*) ;;
+    # Windows drive paths from Git Bash, e.g. C:\Users\me.
+    [A-Za-z]:*) WORKSPACE_ROOT=$(cygpath -u "$WORKSPACE_ROOT") ;;
     *) WORKSPACE_ROOT=$(pwd)/$WORKSPACE_ROOT ;;
 esac
 
