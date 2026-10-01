@@ -26,6 +26,7 @@
  * | `RoModularAgents` | Provider-neutral agent contracts, adapters, and skills |
  * | `RoModularBuild` | Shared build infrastructure |
  * | `Foundation` | Low-level C++ library |
+ * | `DspCore` | Signal-processing library |
  * | `MCC` | Music Composition Core |
  * | `MIDILAR` | Legacy MIDI and music-technology project |
  *
@@ -55,6 +56,7 @@
  * |-- RoModularAgents/
  * |-- RoModularBuild/
  * |-- Foundation/
+ * |-- DspCore/
  * |-- MCC/
  * `-- MIDILAR/
  * @endcode
@@ -167,14 +169,14 @@
  * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
  * @endcode
  *
- * Foundation and MCC are installed by default. MIDILAR is legacy and is added
+ * Foundation, DspCore and MCC are installed by default. MIDILAR is legacy and is added
  * only with `--include-legacy` or `-IncludeLegacy`. Each library is a Git clone
  * named after its Arduino library, so it can be updated later with `git pull`.
  * An existing clone with the expected `origin` is left unchanged; any other
  * existing folder is refused unless `--force` or `-Force` replaces it.
  * `--dry-run` or `-DryRun` previews the operation. Sketches must include
- * `<Foundation.h>` and `<MCC.h>`, and MCC on the Arduino AVR core requires
- * `-std=gnu++17`.
+ * `<Foundation.h>` and each library they use, such as `<DspCore.h>` or
+ * `<MCC.h>`. DspCore and MCC on the Arduino AVR core require `-std=gnu++17`.
  *
  * @section RoModularWorkspaceBootstrapReferences Agent Runtime References
  *

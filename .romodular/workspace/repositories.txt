@@ -3,5 +3,6 @@ RoModular|https://github.com/ChecheRomo96/RoModular.git
 RoModularAgents|https://github.com/ChecheRomo96/RoModularAgents.git
 RoModularBuild|https://github.com/ChecheRomo96/RoModularBuild.git
 Foundation|https://github.com/ChecheRomo96/Foundation.git
+DspCore|https://github.com/ChecheRomo96/DspCore.git
 MCC|https://github.com/ChecheRomo96/MusicCompositionCore.git
 MIDILAR|https://github.com/ChecheRomo96/MIDILAR.git

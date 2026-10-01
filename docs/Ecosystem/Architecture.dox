@@ -14,24 +14,30 @@
  *   build [label="RoModularBuild\nbuild and CI infrastructure"];
  *   foundation [label="Foundation\nportable C++ base library"];
  *   mcc [label="MusicCompositionCore (MCC)\nmusic-theory library"];
+ *   dsp [label="DspCore\nsignal-processing library"];
  *   midilar [label="MIDILAR\nMIDI and music systems", style="rounded,dashed,filled", fillcolor="#f5f5f5"];
  *
  *   portal -> agents [style=dotted, label="documents"];
  *   portal -> build [style=dotted, label="documents"];
  *   portal -> foundation [style=dotted, label="documents"];
  *   portal -> mcc [style=dotted, label="documents"];
+ *   portal -> dsp [style=dotted, label="documents"];
  *   portal -> midilar [style=dotted, label="documents"];
  *
  *   build -> foundation [label="pinned build contract"];
  *   build -> mcc [label="pinned build contract"];
+ *   build -> dsp [label="pinned build contract"];
  *   agents -> portal [style=dotted, label="guides"];
  *   agents -> build [style=dotted, label="guides"];
  *   agents -> foundation [style=dotted, label="guides"];
  *   agents -> mcc [style=dotted, label="guides"];
+ *   agents -> dsp [style=dotted, label="guides"];
  *   agents -> midilar [style=dotted, label="guides"];
  *   foundation -> mcc [label="public C++ dependency"];
+ *   foundation -> dsp [label="public C++ dependency"];
  *   foundation -> midilar [style=dashed, label="planned base"];
  *   mcc -> midilar [style=dashed, label="planned musical model"];
+ *   dsp -> midilar [style=dashed, label="planned signal processing"];
  * }
  * @enddot
  *
@@ -45,6 +51,7 @@
  * - Libraries depend downward on smaller, more general libraries.
  * - Foundation contains no music-domain concepts.
  * - MCC contains music theory but no MIDI protocol or device behavior.
+ * - DspCore contains signal processing but no MIDI or music-theory concepts.
  * - MIDILAR owns MIDI and higher-level real-time music-system behavior.
  * - RoModularBuild may provide build mechanics but never project policy.
  * - RoModularAgents provides engineering guidance but is not a build or

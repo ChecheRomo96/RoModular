@@ -26,6 +26,7 @@
  * | RoModularAgents | Active | Maintain the canonical guidance installed by the workspace bootstrap validated on macOS and Windows |
  * | RoModularBuild | Active | Stabilize the shared profiles already consumed by Foundation and MCC |
  * | Foundation | Stable | Continue evidence-based 1.x maintenance |
+ * | DspCore | Active | Build signal processing phase by phase on the 0.1.0 scaffold |
  * | MusicCompositionCore | Active | Continue the reconstruction on its validated Foundation and RoModularBuild baseline |
  * | MIDILAR | Active | Rebuild from scratch on the `rebuild` branch, starting with the MIDI-domain specification |
  * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |

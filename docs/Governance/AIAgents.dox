@@ -72,6 +72,7 @@
  *
  * @code{.text}
  * GitHub/
+ * |-- DspCore/
  * |-- Foundation/
  * |-- MCC/
  * |-- MIDILAR/

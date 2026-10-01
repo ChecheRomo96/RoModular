@@ -53,6 +53,7 @@ jobs:
           ./scripts/install-arduino-libraries.sh "$RUNNER_TEMP/arduino-libraries"
           ./scripts/install-arduino-libraries.sh "$RUNNER_TEMP/arduino-libraries"
           test -f "$RUNNER_TEMP/arduino-libraries/Foundation/library.properties"
+          test -f "$RUNNER_TEMP/arduino-libraries/DspCore/library.properties"
           test -f "$RUNNER_TEMP/arduino-libraries/MCC/library.properties"
 
   windows:
@@ -90,8 +91,15 @@ jobs:
           $Libraries = Join-Path $env:RUNNER_TEMP "arduino-libraries"
           ./scripts/install-arduino-libraries.ps1 $Libraries
           ./scripts/install-arduino-libraries.ps1 $Libraries
-          foreach ($Library in "Foundation", "MCC") {
+          foreach ($Library in "Foundation", "DspCore", "MCC") {
             if (-not (Test-Path (Join-Path $Libraries "$Library/library.properties"))) {
               throw "$Library was not installed"
             }
           }
+
+      - name: Install Arduino libraries from Git Bash with a drive path
+        shell: bash
+        run: |
+          LIBRARIES=$(cygpath -w "$RUNNER_TEMP/arduino-libraries-bash")
+          ./scripts/install-arduino-libraries.sh "$LIBRARIES"
+          test -f "$RUNNER_TEMP/arduino-libraries-bash/MCC/library.properties"

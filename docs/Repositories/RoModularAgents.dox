@@ -9,7 +9,7 @@
  * | Current version | `0.1.0` |
  * | Status | Active; installed by the workspace bootstrap validated on macOS and Windows |
  * | Source | [ChecheRomo96/RoModularAgents](https://github.com/ChecheRomo96/RoModularAgents) |
- * | Consumers | RoModular, RoModularBuild, Foundation, MCC, and MIDILAR |
+ * | Consumers | RoModular, RoModularBuild, Foundation, DspCore, MCC, and MIDILAR |
  *
  * RoModularAgents is not a source, build, or runtime dependency. It provides a
  * common operating contract, bounded roles, repository ownership adapters,

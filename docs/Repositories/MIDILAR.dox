@@ -14,7 +14,7 @@
  * The legacy implementation had no consumers and was removed. MIDILAR is
  * rebuilt phase by phase, starting with a MIDI-domain specification, on the
  * same pinned RoModularBuild `v0.4.0` as Foundation and MCC. Signal processing
- * moves to a future DSPCore library. The `rebuild` branch merges into `main`
+ * moves to @ref RoModular_Repositories_DspCore "DspCore". The `rebuild` branch merges into `main`
  * once it is stable; until then this portal does not advertise a MIDILAR
  * release.
  */
