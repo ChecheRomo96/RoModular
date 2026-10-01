@@ -3,7 +3,7 @@
 Clones the RoModular Arduino libraries into an Arduino libraries folder.
 
 .DESCRIPTION
-Installs Foundation and MCC, in dependency order, from the origins listed in
+Installs Foundation, DspCore and MCC, in dependency order, from the origins listed in
 the workspace repository manifest. Existing clones with the expected origin
 are left unchanged. Any other existing folder is refused unless -Force is set.
 
@@ -35,7 +35,7 @@ $RoModularRoot = Split-Path -Parent $PSScriptRoot
 $Manifest = Join-Path $RoModularRoot ".romodular/workspace/repositories.txt"
 
 # Runtime libraries in dependency order. MIDILAR is legacy and opt-in.
-$Libraries = @("Foundation", "MCC")
+$Libraries = @("Foundation", "DspCore", "MCC")
 if ($IncludeLegacy) {
     $Libraries += "MIDILAR"
 }
@@ -124,4 +124,4 @@ if ($Failed) {
 }
 
 Write-Host "Arduino libraries installed. Existing clones were not updated."
-Write-Host "MCC on Arduino AVR requires -std=gnu++17 (see the MCC README)."
+Write-Host "DspCore and MCC on Arduino AVR require -std=gnu++17 (see their READMEs)."

@@ -7,7 +7,7 @@ ROMODULAR_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
 
 # Runtime libraries in dependency order. MIDILAR is legacy and opt-in.
-LIBRARIES="Foundation MCC"
+LIBRARIES="Foundation DspCore MCC"
 LEGACY_LIBRARIES="MIDILAR"
 
 LIBRARIES_ROOT=
@@ -59,6 +59,8 @@ command -v git >/dev/null 2>&1 || fail "Git is required but was not found on PAT
 
 case "$LIBRARIES_ROOT" in
     /*) ;;
+    # Windows drive paths from Git Bash, e.g. C:\Users\me.
+    [A-Za-z]:*) LIBRARIES_ROOT=$(cygpath -u "$LIBRARIES_ROOT") ;;
     *) LIBRARIES_ROOT=$(pwd)/$LIBRARIES_ROOT ;;
 esac
 
@@ -113,4 +115,4 @@ done
 
 [ "$FAILED" -eq 0 ] || fail "Arduino library installation completed with errors"
 printf 'Arduino libraries installed. Existing clones were not updated.\n'
-printf 'MCC on Arduino AVR requires -std=gnu++17 (see the MCC README).\n'
+printf 'DspCore and MCC on Arduino AVR require -std=gnu++17 (see their READMEs).\n'
