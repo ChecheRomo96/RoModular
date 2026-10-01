@@ -46,6 +46,15 @@ jobs:
             --root "$GITHUB_WORKSPACE/.ci-workspace" \
             --manifest "$GITHUB_WORKSPACE/.github/testdata/agent-workspace.txt"
 
+      - name: Install Arduino libraries twice
+        shell: bash
+        run: |
+          sh -n scripts/install-arduino-libraries.sh
+          ./scripts/install-arduino-libraries.sh "$RUNNER_TEMP/arduino-libraries"
+          ./scripts/install-arduino-libraries.sh "$RUNNER_TEMP/arduino-libraries"
+          test -f "$RUNNER_TEMP/arduino-libraries/Foundation/library.properties"
+          test -f "$RUNNER_TEMP/arduino-libraries/MCC/library.properties"
+
   windows:
     name: Windows / PowerShell bootstrap
     runs-on: windows-2025-vs2026
@@ -74,3 +83,15 @@ jobs:
           ./scripts/bootstrap-workspace.ps1 `
             -Root (Join-Path $env:GITHUB_WORKSPACE ".ci-workspace") `
             -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/agent-workspace.txt")
+
+      - name: Install Arduino libraries twice
+        shell: pwsh
+        run: |
+          $Libraries = Join-Path $env:RUNNER_TEMP "arduino-libraries"
+          ./scripts/install-arduino-libraries.ps1 $Libraries
+          ./scripts/install-arduino-libraries.ps1 $Libraries
+          foreach ($Library in "Foundation", "MCC") {
+            if (-not (Test-Path (Join-Path $Libraries "$Library/library.properties"))) {
+              throw "$Library was not installed"
+            }
+          }

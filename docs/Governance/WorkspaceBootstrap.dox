@@ -153,6 +153,29 @@
  * The `ROMODULAR_WORKSPACE_ROOT` environment variable supplies the root when
  * the corresponding command-line option is omitted.
  *
+ * @section RoModularWorkspaceBootstrapArduino Arduino Libraries
+ *
+ * `scripts/install-arduino-libraries.sh` and
+ * `scripts/install-arduino-libraries.ps1` clone the runtime libraries into an
+ * Arduino libraries folder, using the origins from the same manifest:
+ *
+ * @code{.sh}
+ * ./scripts/install-arduino-libraries.sh "$HOME/Documents/Arduino/libraries"
+ * @endcode
+ *
+ * @code{.powershell}
+ * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
+ * @endcode
+ *
+ * Foundation and MCC are installed by default. MIDILAR is legacy and is added
+ * only with `--include-legacy` or `-IncludeLegacy`. Each library is a Git clone
+ * named after its Arduino library, so it can be updated later with `git pull`.
+ * An existing clone with the expected `origin` is left unchanged; any other
+ * existing folder is refused unless `--force` or `-Force` replaces it.
+ * `--dry-run` or `-DryRun` previews the operation. Sketches must include
+ * `<Foundation.h>` and `<MCC.h>`, and MCC on the Arduino AVR core requires
+ * `-std=gnu++17`.
+ *
  * @section RoModularWorkspaceBootstrapReferences Agent Runtime References
  *
  * - <a href="https://developers.openai.com/api/docs/guides/tools-skills">OpenAI Agent Skills</a>
