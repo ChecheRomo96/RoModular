@@ -6,15 +6,25 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | MIDI protocol data, parsing, routing, timing, transports and devices |
- * | Status | Rebuilding from scratch on the `rebuild` branch; version `0.1.0`, phases 0-6 done (protocol, UMP packets, MIDI 1.0 translation, MCC integration, devices) |
+ * | Status | Release `0.2.0` prepared on the `rebuild` branch (phases 1-9); merges into `main` and is tagged after hardware validation |
  * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR/tree/rebuild) |
  * | Runtime dependencies | Foundation `1.4.0` or a newer 1.x release, MCC `0.5.2` or a newer 0.x release |
  * | Public CMake target | `MIDILAR::MIDILAR` |
  *
- * The legacy implementation had no consumers and was removed. MIDILAR is
- * rebuilt phase by phase, starting with a MIDI-domain specification, on the
- * same pinned RoModularBuild `v0.4.0` as Foundation and MCC. Signal processing
- * moves to @ref RoModular_Repositories_DspCore "DspCore". The `rebuild` branch merges into `main`
- * once it is stable; until then this portal does not advertise a MIDILAR
- * release.
+ * The legacy implementation had no consumers and was removed. MIDILAR was
+ * rebuilt phase by phase from a MIDI-domain specification, on the same pinned
+ * RoModularBuild `v0.4.0` as Foundation and MCC. Release `0.2.0` contains:
+ *
+ * - Protocol: channels, groups and masks; note, controller and program
+ *   numbers; values at MIDI 2.0 resolution; UMP packets; MIDI 1.0 byte-stream
+ *   and USB MIDI 1.0 translation; MIDI Time Code; MCC pitch conversions.
+ * - Devices: channel filter and reassignment, transposition, velocity curves,
+ *   scale filter and chord generation on MCC, a router, MIDI clock, a
+ *   Euclidean step sequencer and MTC.
+ *
+ * Hardware transports (UART, USB stacks, desktop MIDI APIs) will be separate
+ * libraries built on MIDILAR's translations. MIDI-CI is deferred. Signal
+ * processing belongs to @ref RoModular_Repositories_DspCore "DspCore". Until
+ * `0.2.0` is merged and tagged, MIDILAR's `main` branch still holds the legacy
+ * code and this portal does not advertise a MIDILAR release.
  */
