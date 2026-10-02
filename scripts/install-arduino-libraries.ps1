@@ -40,9 +40,9 @@ $Manifest = Join-Path $RoModularRoot ".romodular/workspace/repositories.txt"
 # Runtime libraries in dependency order.
 $Libraries = @("Foundation", "DspCore", "MCC", "MIDILAR")
 
-# Branch to install when it is not the repository's default branch. MIDILAR
-# 0.2.0 lives on `rebuild` until it merges into `main`; drop it then.
-$Branches = @{ "MIDILAR" = "rebuild" }
+# Branch to install when a clone may be on another one. MIDILAR clones made
+# before 0.2.0 tracked `rebuild`; they are switched back to `main`.
+$Branches = @{ "MIDILAR" = "main" }
 
 if ($null -eq (Get-Command git -ErrorAction SilentlyContinue)) {
     throw "Git is required but was not found on PATH"

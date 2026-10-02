@@ -28,7 +28,7 @@
  * | `Foundation` | Low-level C++ library |
  * | `DspCore` | Signal-processing library |
  * | `MCC` | Music Composition Core |
- * | `MIDILAR` | MIDI protocol and devices (0.2.0 prepared on the `rebuild` branch) |
+ * | `MIDILAR` | MIDI protocol, translation and devices |
  *
  * Directory names are independent from remote repository names. For example,
  * the `MCC` directory clones the `MusicCompositionCore` repository.
@@ -170,9 +170,8 @@
  * @endcode
  *
  * Foundation, DspCore, MCC and MIDILAR are installed, in dependency order.
- * MIDILAR comes from its `rebuild` branch, where release 0.2.0 is prepared,
- * until that release merges into `main`; an existing MIDILAR clone on the
- * legacy `main` is switched to `rebuild`. Each library is a Git clone named
+ * A MIDILAR clone made before release 0.2.0, which tracked the `rebuild`
+ * branch, is switched back to `main`. Each library is a Git clone named
  * after its Arduino library. Running the script again fast-forwards every
  * existing clone with the expected `origin` to the latest commit of its
  * branch; clones with local changes or diverged history are reported and

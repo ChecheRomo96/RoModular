@@ -9,11 +9,11 @@ MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
 # Runtime libraries in dependency order.
 LIBRARIES="Foundation DspCore MCC MIDILAR"
 
-# Branch to install when it is not the repository's default branch. MIDILAR
-# 0.2.0 lives on `rebuild` until it merges into `main`; drop it then.
+# Branch to install when a clone may be on another one. MIDILAR clones made
+# before 0.2.0 tracked `rebuild`; they are switched back to `main`.
 library_branch() {
     case "$1" in
-        MIDILAR) printf '%s' rebuild ;;
+        MIDILAR) printf '%s' main ;;
         *) printf '' ;;
     esac
 }

@@ -6,14 +6,17 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | MIDI protocol data, parsing, routing, timing, transports and devices |
- * | Status | Release `0.2.0` prepared on the `rebuild` branch (phases 1-9); merges into `main` and is tagged after hardware validation |
- * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR/tree/rebuild) |
+ * | Current release | [`v0.2.0`](https://github.com/ChecheRomo96/MIDILAR/releases/tag/v0.2.0) |
+ * | Status | Active; MIDI-CI deferred |
+ * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR) |
+ * | Documentation | [MIDILAR on GitHub Pages](https://checheromo96.github.io/MIDILAR/) |
  * | Runtime dependencies | Foundation `1.4.0` or a newer 1.x release, MCC `0.5.2` or a newer 0.x release |
  * | Public CMake target | `MIDILAR::MIDILAR` |
  *
  * The legacy implementation had no consumers and was removed. MIDILAR was
  * rebuilt phase by phase from a MIDI-domain specification, on the same pinned
- * RoModularBuild `v0.4.0` as Foundation and MCC. Release `0.2.0` contains:
+ * RoModularBuild `v0.4.0` as Foundation and MCC, and validated on an Arduino
+ * Mega 2560. Release `0.2.0` contains:
  *
  * - Protocol: channels, groups and masks; note, controller and program
  *   numbers; values at MIDI 2.0 resolution; UMP packets; MIDI 1.0 byte-stream
@@ -24,7 +27,5 @@
  *
  * Hardware transports (UART, USB stacks, desktop MIDI APIs) will be separate
  * libraries built on MIDILAR's translations. MIDI-CI is deferred. Signal
- * processing belongs to @ref RoModular_Repositories_DspCore "DspCore". Until
- * `0.2.0` is merged and tagged, MIDILAR's `main` branch still holds the legacy
- * code and this portal does not advertise a MIDILAR release.
+ * processing belongs to @ref RoModular_Repositories_DspCore "DspCore".
  */

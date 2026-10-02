@@ -28,7 +28,7 @@
  * | Foundation | Stable | Continue evidence-based 1.x maintenance |
  * | DspCore | Active | Build signal processing phase by phase on the 0.1.0 scaffold |
  * | MusicCompositionCore | Active | Continue the reconstruction on its validated Foundation and RoModularBuild baseline |
- * | MIDILAR | Active | Release `0.2.0` prepared on the `rebuild` branch; validate on hardware, then merge into `main` and tag |
+ * | MIDILAR | Active | Released `0.2.0`; continue `ACTION_PLAN.md` (MIDI-CI deferred) and separate transport libraries on request |
  * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |
  *
  * @section RoModularDocumentationOwnership Documentation Ownership
