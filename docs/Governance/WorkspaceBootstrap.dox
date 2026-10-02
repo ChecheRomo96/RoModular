@@ -28,7 +28,7 @@
  * | `Foundation` | Low-level C++ library |
  * | `DspCore` | Signal-processing library |
  * | `MCC` | Music Composition Core |
- * | `MIDILAR` | Legacy MIDI and music-technology project |
+ * | `MIDILAR` | MIDI protocol and devices (0.2.0 prepared on the `rebuild` branch) |
  *
  * Directory names are independent from remote repository names. For example,
  * the `MCC` directory clones the `MusicCompositionCore` repository.
@@ -169,8 +169,9 @@
  * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
  * @endcode
  *
- * Foundation, DspCore and MCC are installed by default. MIDILAR is legacy and is added
- * only with `--include-legacy` or `-IncludeLegacy`. Each library is a Git clone
+ * Foundation, DspCore and MCC are installed by default. MIDILAR's `main` branch
+ * still holds the legacy code until release 0.2.0 merges, so it is added only
+ * with `--include-legacy` or `-IncludeLegacy`. Each library is a Git clone
  * named after its Arduino library, so it can be updated later with `git pull`.
  * An existing clone with the expected `origin` is left unchanged; any other
  * existing folder is refused unless `--force` or `-Force` replaces it.
