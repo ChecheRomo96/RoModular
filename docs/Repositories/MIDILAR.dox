@@ -6,9 +6,9 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | MIDI protocol data, parsing, routing, timing, transports and devices |
- * | Status | Rebuilding from scratch on the `rebuild` branch; version `0.1.0` scaffold |
+ * | Status | Rebuilding from scratch on the `rebuild` branch; version `0.1.0`, phases 0-6 done (protocol, UMP packets, MIDI 1.0 translation, MCC integration, devices) |
  * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR/tree/rebuild) |
- * | Runtime dependencies | Foundation `1.4.0` or a newer 1.x release, MCC `0.5.1` or a newer 0.x release |
+ * | Runtime dependencies | Foundation `1.4.0` or a newer 1.x release, MCC `0.5.2` or a newer 0.x release |
  * | Public CMake target | `MIDILAR::MIDILAR` |
  *
  * The legacy implementation had no consumers and was removed. MIDILAR is
