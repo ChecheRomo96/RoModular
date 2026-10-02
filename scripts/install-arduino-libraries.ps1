@@ -1,17 +1,20 @@
 <#
 .SYNOPSIS
-Clones the RoModular Arduino libraries into an Arduino libraries folder.
+Clones the RoModular Arduino libraries into an Arduino libraries folder, or
+brings existing clones up to date.
 
 .DESCRIPTION
-Installs Foundation, DspCore and MCC, in dependency order, from the origins listed in
-the workspace repository manifest. Existing clones with the expected origin
-are left unchanged. Any other existing folder is refused unless -Force is set.
+Installs Foundation, DspCore, MCC and MIDILAR, in dependency order, from the
+origins listed in the workspace repository manifest. Existing clones with the
+expected origin are fast-forwarded to the latest commit of their branch;
+clones with local changes or diverged history are reported and left as they
+are. Any other existing folder is refused unless -Force is set.
 
 .PARAMETER Path
 Arduino libraries folder, for example "$HOME\Documents\Arduino\libraries".
 
 .PARAMETER IncludeLegacy
-Also install MIDILAR (legacy, pending reconstruction).
+Accepted and ignored: MIDILAR is always installed.
 
 .PARAMETER Force
 Replace existing library folders that are not the expected clone.
@@ -34,11 +37,12 @@ $ErrorActionPreference = "Stop"
 $RoModularRoot = Split-Path -Parent $PSScriptRoot
 $Manifest = Join-Path $RoModularRoot ".romodular/workspace/repositories.txt"
 
-# Runtime libraries in dependency order. MIDILAR is legacy and opt-in.
-$Libraries = @("Foundation", "DspCore", "MCC")
-if ($IncludeLegacy) {
-    $Libraries += "MIDILAR"
-}
+# Runtime libraries in dependency order.
+$Libraries = @("Foundation", "DspCore", "MCC", "MIDILAR")
+
+# Branch to install when it is not the repository's default branch. MIDILAR
+# 0.2.0 lives on `rebuild` until it merges into `main`; drop it then.
+$Branches = @{ "MIDILAR" = "rebuild" }
 
 if ($null -eq (Get-Command git -ErrorAction SilentlyContinue)) {
     throw "Git is required but was not found on PATH"
@@ -52,6 +56,68 @@ function Normalize-GitOrigin {
 
     $Normalized = $Origin.Trim().TrimEnd("/")
     return ($Normalized -replace '\.git$', '')
+}
+
+function Get-CurrentBranch {
+    param([Parameter(Mandatory = $true)][string]$LibraryPath)
+
+    $Current = (& git -C $LibraryPath symbolic-ref --quiet --short HEAD 2>$null)
+    if ($LASTEXITCODE -ne 0) {
+        return ""
+    }
+    return "$Current".Trim()
+}
+
+# Fast-forwards a clean clone to the latest commit of its branch. Returns
+# "updated", "skipped" or "failed".
+function Update-Clone {
+    param(
+        [Parameter(Mandatory = $true)][string]$Library,
+        [Parameter(Mandatory = $true)][string]$LibraryPath,
+        [string]$Branch
+    )
+
+    $Status = (& git -C $LibraryPath status --porcelain)
+    if ($Status) {
+        Write-Warning "$Library has local changes; not updated"
+        return "skipped"
+    }
+    if ($DryRun) {
+        $Target = if ($Branch) { " to branch $Branch" } else { "" }
+        Write-Host "[dry-run] update $Library$Target"
+        return "updated"
+    }
+    & git -C $LibraryPath fetch --quiet origin | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Fetch failed for $Library" -ErrorAction Continue
+        return "failed"
+    }
+    $Current = Get-CurrentBranch -LibraryPath $LibraryPath
+    if (-not $Branch) {
+        $Branch = $Current
+        if (-not $Branch) {
+            Write-Warning "$Library is not on a branch; not updated"
+            return "skipped"
+        }
+    }
+    if ($Current -ne $Branch) {
+        & git -C $LibraryPath checkout --quiet $Branch 2>$null | Out-Null
+        if ($LASTEXITCODE -ne 0) {
+            & git -C $LibraryPath checkout --quiet -b $Branch --track "origin/$Branch" | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                Write-Error "Cannot switch $Library to branch $Branch" -ErrorAction Continue
+                return "failed"
+            }
+        }
+    }
+    & git -C $LibraryPath merge --quiet --ff-only "origin/$Branch" | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        Write-Warning "$Library has commits not on origin/$Branch; not updated"
+        return "skipped"
+    }
+    $Head = (& git -C $LibraryPath rev-parse --short HEAD)
+    Write-Host "updated: $Library ($Branch at $Head)"
+    return "updated"
 }
 
 $Origins = @{}
@@ -69,6 +135,7 @@ if (-not $DryRun) {
 }
 
 $Failed = $false
+$Skipped = $false
 foreach ($Library in $Libraries) {
     if (-not $Origins.ContainsKey($Library)) {
         Write-Error "$Library is missing from $Manifest" -ErrorAction Continue
@@ -78,6 +145,8 @@ foreach ($Library in $Libraries) {
 
     $Origin = $Origins[$Library]
     $LibraryPath = Join-Path $LibrariesRoot $Library
+    $Branch = if ($Branches.ContainsKey($Library)) { $Branches[$Library] } else { "" }
+    $BranchNote = if ($Branch) { " (branch $Branch)" } else { "" }
 
     if (Test-Path -LiteralPath $LibraryPath) {
         $ActualOrigin = $null
@@ -89,7 +158,10 @@ foreach ($Library in $Libraries) {
         }
         if ($ActualOrigin -and
             (Normalize-GitOrigin -Origin $ActualOrigin) -eq (Normalize-GitOrigin -Origin $Origin)) {
-            Write-Host "present: $Library (left unchanged)"
+            switch (Update-Clone -Library $Library -LibraryPath $LibraryPath -Branch $Branch) {
+                "skipped" { $Skipped = $true }
+                "failed" { $Failed = $true }
+            }
             continue
         }
         if (-not $Force) {
@@ -107,12 +179,17 @@ foreach ($Library in $Libraries) {
         Remove-Item -LiteralPath $LibraryPath -Recurse -Force
     }
     elseif ($DryRun) {
-        Write-Host "[dry-run] clone $Origin into $LibraryPath"
+        Write-Host "[dry-run] clone $Origin$BranchNote into $LibraryPath"
         continue
     }
 
-    Write-Host "cloning: $Library"
-    & git clone $Origin $LibraryPath
+    Write-Host "cloning: $Library$BranchNote"
+    if ($Branch) {
+        & git clone --branch $Branch $Origin $LibraryPath
+    }
+    else {
+        & git clone $Origin $LibraryPath
+    }
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Clone failed for $Library" -ErrorAction Continue
         $Failed = $true
@@ -123,5 +200,10 @@ if ($Failed) {
     throw "Arduino library installation completed with errors"
 }
 
-Write-Host "Arduino libraries installed. Existing clones were not updated."
-Write-Host "DspCore and MCC on Arduino AVR require -std=gnu++17 (see their READMEs)."
+if ($Skipped) {
+    Write-Host "Arduino libraries installed; the clones warned about above were not updated."
+}
+else {
+    Write-Host "Arduino libraries installed and up to date."
+}
+Write-Host "DspCore, MCC and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs)."
