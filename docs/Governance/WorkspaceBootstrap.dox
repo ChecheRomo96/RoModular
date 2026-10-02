@@ -169,15 +169,20 @@
  * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
  * @endcode
  *
- * Foundation, DspCore and MCC are installed by default. MIDILAR's `main` branch
- * still holds the legacy code until release 0.2.0 merges, so it is added only
- * with `--include-legacy` or `-IncludeLegacy`. Each library is a Git clone
- * named after its Arduino library, so it can be updated later with `git pull`.
- * An existing clone with the expected `origin` is left unchanged; any other
- * existing folder is refused unless `--force` or `-Force` replaces it.
+ * Foundation, DspCore, MCC and MIDILAR are installed, in dependency order.
+ * MIDILAR comes from its `rebuild` branch, where release 0.2.0 is prepared,
+ * until that release merges into `main`; an existing MIDILAR clone on the
+ * legacy `main` is switched to `rebuild`. Each library is a Git clone named
+ * after its Arduino library. Running the script again fast-forwards every
+ * existing clone with the expected `origin` to the latest commit of its
+ * branch; clones with local changes or diverged history are reported and
+ * left as they are. Any other existing folder is refused unless `--force` or
+ * `-Force` replaces it. `--include-legacy` and `-IncludeLegacy` are still
+ * accepted and have no effect.
  * `--dry-run` or `-DryRun` previews the operation. Sketches must include
  * `<Foundation.h>` and each library they use, such as `<DspCore.h>` or
- * `<MCC.h>`. DspCore and MCC on the Arduino AVR core require `-std=gnu++17`.
+ * `<MCC.h>`. DspCore, MCC and MIDILAR on the Arduino AVR core require
+ * `-std=gnu++17`.
  *
  * @section RoModularWorkspaceBootstrapReferences Agent Runtime References
  *

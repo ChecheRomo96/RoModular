@@ -55,6 +55,8 @@ jobs:
           test -f "$RUNNER_TEMP/arduino-libraries/Foundation/library.properties"
           test -f "$RUNNER_TEMP/arduino-libraries/DspCore/library.properties"
           test -f "$RUNNER_TEMP/arduino-libraries/MCC/library.properties"
+          test -f "$RUNNER_TEMP/arduino-libraries/MIDILAR/library.properties"
+          test "$(git -C "$RUNNER_TEMP/arduino-libraries/MIDILAR" rev-parse --abbrev-ref HEAD)" = rebuild
 
   windows:
     name: Windows / PowerShell bootstrap
@@ -91,10 +93,14 @@ jobs:
           $Libraries = Join-Path $env:RUNNER_TEMP "arduino-libraries"
           ./scripts/install-arduino-libraries.ps1 $Libraries
           ./scripts/install-arduino-libraries.ps1 $Libraries
-          foreach ($Library in "Foundation", "DspCore", "MCC") {
+          foreach ($Library in "Foundation", "DspCore", "MCC", "MIDILAR") {
             if (-not (Test-Path (Join-Path $Libraries "$Library/library.properties"))) {
               throw "$Library was not installed"
             }
+          }
+          $Branch = (& git -C (Join-Path $Libraries "MIDILAR") rev-parse --abbrev-ref HEAD)
+          if ($Branch -ne "rebuild") {
+            throw "MIDILAR is on '$Branch' instead of rebuild"
           }
 
       - name: Install Arduino libraries from Git Bash with a drive path
