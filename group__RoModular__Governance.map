@@ -1,0 +1,5 @@
+<map id="Governance" name="Governance">
+<area shape="rect" id="Node000001" title="Status, documentation ownership, and shared operating rules across the ecosystem." alt="" coords="5,31,105,56"/>
+<area shape="rect" id="Node000002" href="$group__RoModular__Governance__AIAgents.html" title="Provider&#45;neutral instructions for AI&#45;assisted work across RoModular repositories." alt="" coords="153,5,296,31"/>
+<area shape="rect" id="Node000003" href="$group__RoModular__Governance__Status.html" title="Maturity definitions and the current ecosystem snapshot." alt="" coords="156,55,293,80"/>
+</map>

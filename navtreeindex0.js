@@ -1,0 +1,24 @@
+var NAVTREEINDEX0 =
+{
+"group__RoModular__Ecosystem.html":[3,0],
+"group__RoModular__Ecosystem__Architecture.html":[3,0,0],
+"group__RoModular__Ecosystem__Overview.html":[3,0,1],
+"group__RoModular__Governance.html":[3,1],
+"group__RoModular__Governance__AIAgents.html":[3,1,0],
+"group__RoModular__Governance__AIAgents__Workspace.html":[3,1,0,0],
+"group__RoModular__Governance__Status.html":[3,1,1],
+"group__RoModular__Repositories.html":[3,2],
+"group__RoModular__Repositories__Agents.html":[3,2,5],
+"group__RoModular__Repositories__Build.html":[3,2,6],
+"group__RoModular__Repositories__DspCore.html":[3,2,0],
+"group__RoModular__Repositories__Foundation.html":[3,2,1],
+"group__RoModular__Repositories__MCC.html":[3,2,2],
+"group__RoModular__Repositories__MIDILAR.html":[3,2,3],
+"group__RoModular__Repositories__Portal.html":[3,2,4],
+"index.html":[],
+"index.html#RoModularMainPrinciple":[1],
+"index.html#RoModularMainStart":[0],
+"md_README.html":[2],
+"pages.html":[],
+"topics.html":[3]
+};
