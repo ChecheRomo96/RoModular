@@ -178,9 +178,11 @@
  * left as they are. Any other existing folder is refused unless `--force` or
  * `-Force` replaces it. `--include-legacy` and `-IncludeLegacy` are still
  * accepted and have no effect.
- * `--dry-run` or `-DryRun` previews the operation. Sketches must include
- * `<Foundation.h>` and each library they use, such as `<DspCore.h>` or
- * `<MCC.h>`. DspCore, MCC and MIDILAR on the Arduino AVR core require
+ * `--dry-run` or `-DryRun` previews the operation. A sketch includes a
+ * header of each library it uses, such as `<MCC.h>` or `<MIDILAR_Devices.h>`.
+ * MCC and MIDILAR headers bring in the libraries they depend on; with older
+ * releases, or with DspCore, the sketch also includes `<Foundation.h>` and
+ * each dependency. DspCore, MCC and MIDILAR on the Arduino AVR core require
  * `-std=gnu++17`.
  *
  * @section RoModularWorkspaceBootstrapScan Project Scan
@@ -195,17 +197,19 @@
  *
  * @code{.txt}
  * Suggested root headers:
- *   #include <Foundation_BuildSettings.h>
- *   #include <MCC_BuildSettings.h>
  *   #include <MIDILAR_Devices.h>
  * @endcode
  *
  * The scan follows the project's own includes through the library sources and
  * reads the qualified names it uses, such as `MCC::Scales::Make`. Umbrella
  * headers such as `<MCC.h>` include every module, so they are not expanded.
- * Each library in use keeps one header at the root of its `src` folder, since
- * that is how the Arduino builder discovers it; `<Library_BuildSettings.h>` is
- * used when another library's header already brings in the code. The
+ * The Arduino builder discovers a library only through a header at the root
+ * of its `src` folder. When the suggested headers do not already bring in a
+ * library that way, as with older releases of MCC and MIDILAR, the scan adds
+ * one public header for it: the lightest module header the project already
+ * uses, or the library's lightest module header when only its version is
+ * needed. Internal headers such as `<Library_BuildSettings.h>` are never
+ * suggested. The
  * libraries are looked up in the workspace that contains this checkout, or in
  * the folder given with `--libraries`, such as an Arduino libraries folder.
  *
