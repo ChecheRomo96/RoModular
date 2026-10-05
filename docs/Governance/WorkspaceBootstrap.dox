@@ -183,6 +183,40 @@
  * `<MCC.h>`. DspCore, MCC and MIDILAR on the Arduino AVR core require
  * `-std=gnu++17`.
  *
+ * @section RoModularWorkspaceBootstrapScan Project Scan
+ *
+ * `scripts/scan-project.py` reports which RoModular libraries and modules a
+ * project or sketch uses, and suggests root headers to replace the umbrella
+ * headers:
+ *
+ * @code{.sh}
+ * python3 scripts/scan-project.py ../MIDILAR/examples/MIDILAR/Devices/TransposeThru
+ * @endcode
+ *
+ * @code{.txt}
+ * Suggested root headers:
+ *   #include <Foundation_BuildSettings.h>
+ *   #include <MCC_BuildSettings.h>
+ *   #include <MIDILAR_Devices.h>
+ * @endcode
+ *
+ * The scan follows the project's own includes through the library sources and
+ * reads the qualified names it uses, such as `MCC::Scales::Make`. Umbrella
+ * headers such as `<MCC.h>` include every module, so they are not expanded.
+ * Each library in use keeps one header at the root of its `src` folder, since
+ * that is how the Arduino builder discovers it; `<Library_BuildSettings.h>` is
+ * used when another library's header already brings in the code. The
+ * libraries are looked up in the workspace that contains this checkout, or in
+ * the folder given with `--libraries`, such as an Arduino libraries folder.
+ *
+ * The suggestion does not change the size of the program: unused code is
+ * already discarded by the linker on every supported target. It shows what a
+ * project depends on and avoids reading headers it does not need. The scan is
+ * a static text analysis, so check the result by building the project.
+ *
+ * Unlike the bootstrap and installer, this optional tool is written in Python
+ * 3 for both platforms instead of a shell and PowerShell pair.
+ *
  * @section RoModularWorkspaceBootstrapReferences Agent Runtime References
  *
  * - <a href="https://developers.openai.com/api/docs/guides/tools-skills">OpenAI Agent Skills</a>
