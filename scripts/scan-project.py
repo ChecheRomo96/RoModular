@@ -62,7 +62,7 @@ class Library:
 
     @staticmethod
     def find(folder):
-        src = folder / "src"
+        src = (folder / "src").resolve()
         for header in sorted(src.glob("*.h")):
             if "_" not in header.stem and (src / header.stem).is_dir():
                 return Library(src, header.stem)
