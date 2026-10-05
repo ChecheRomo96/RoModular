@@ -14,7 +14,9 @@ expanded. Instead the scan suggests the smallest set of root headers
 (<MCC_Scale.h>, <MIDILAR_Devices.h>, ...) that covers the modules used.
 Every library in the result keeps at least one root header, because the
 Arduino builder only discovers a library through a header at the root of its
-src folder; <Library_BuildSettings.h> is used when nothing else is needed.
+src folder. Only public headers are suggested: the lightest module header the
+project already uses, or the library's lightest module header when only its
+version or settings are used. <Library_BuildSettings.h> is internal and never suggested.
 
 The libraries are looked up in --libraries: a RoModular workspace or an
 Arduino libraries folder. It defaults to the folder that contains this
@@ -167,11 +169,18 @@ class Scanner:
         for module in keep:
             used |= pulls.get(module, {module})
 
-        # One root header per library in use, for Arduino library discovery.
+        # BuildSettings is internal: it is never suggested to users.
+        keep = {m for m in keep if m[1] != SETTINGS}
+
+        # One public root header per library in use, for Arduino library
+        # discovery: the lightest module header among the modules it uses, or
+        # the lightest module header of the library when only its version or
+        # settings are used.
         for name in sorted({n for n, _ in used} - {n for n, _ in keep}):
-            candidates = sorted((m for n, m in used if n == name),
-                                key=lambda m: (len(pulls[(name, m)]), m))
-            keep.add((name, candidates[0]))
+            candidates = [m for n, m in used if n == name and m != SETTINGS] or \
+                [m for n, m in pulls if n == name and m != SETTINGS]
+            candidates.sort(key=lambda m: (len(pulls[(name, m)]), m))
+            keep.add((name, candidates[0] if candidates else None))
 
         umbrellas = sorted({include for path in sources
                             for _, include in INCLUDE.findall(read(path))
@@ -231,7 +240,7 @@ def main(argv):
     print("Umbrella headers included: {}".format(", ".join(umbrellas) or "none"))
     print("Suggested root headers:")
     for library in libraries:
-        for name, module in sorted(keep):
+        for name, module in sorted(keep, key=lambda m: (m[0], m[1] or "")):
             if name == library.name:
                 print("  #include <{}>".format(library.root_headers.get(module, library.umbrella)))
     return 0

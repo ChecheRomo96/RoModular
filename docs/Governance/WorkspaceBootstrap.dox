@@ -195,17 +195,19 @@
  *
  * @code{.txt}
  * Suggested root headers:
- *   #include <Foundation_BuildSettings.h>
- *   #include <MCC_BuildSettings.h>
+ *   #include <Foundation_Functional.h>
+ *   #include <MCC_Pitch.h>
  *   #include <MIDILAR_Devices.h>
  * @endcode
  *
  * The scan follows the project's own includes through the library sources and
  * reads the qualified names it uses, such as `MCC::Scales::Make`. Umbrella
  * headers such as `<MCC.h>` include every module, so they are not expanded.
- * Each library in use keeps one header at the root of its `src` folder, since
- * that is how the Arduino builder discovers it; `<Library_BuildSettings.h>` is
- * used when another library's header already brings in the code. The
+ * Each library in use keeps one public header at the root of its `src`
+ * folder, since that is how the Arduino builder discovers it: the lightest
+ * module header the project already uses, or the library's lightest module
+ * header when only its version is needed. Internal headers such as
+ * `<Library_BuildSettings.h>` are never suggested. The
  * libraries are looked up in the workspace that contains this checkout, or in
  * the folder given with `--libraries`, such as an Arduino libraries folder.
  *
