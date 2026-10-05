@@ -12,11 +12,12 @@ the modules it needs from
 Umbrella headers such as <MCC.h> pull every module, so they are not
 expanded. Instead the scan suggests the smallest set of root headers
 (<MCC_Scale.h>, <MIDILAR_Devices.h>, ...) that covers the modules used.
-Every library in the result keeps at least one root header, because the
-Arduino builder only discovers a library through a header at the root of its
-src folder. Only public headers are suggested: the lightest module header the
-project already uses, or the library's lightest module header when only its
-version or settings are used. <Library_BuildSettings.h> is internal and never suggested.
+The Arduino builder only discovers a library through a header at the root of
+its src folder, so every library in use must be reached through one. When the
+suggested headers do not already reach a library that way, the scan adds one
+public header for it: the lightest module header the project already uses, or
+the library's lightest module header when only its version or settings are
+used. <Library_BuildSettings.h> is internal and never suggested.
 
 The libraries are looked up in --libraries: a RoModular workspace or an
 Arduino libraries folder. It defaults to the folder that contains this
@@ -136,6 +137,28 @@ class Scanner:
                     pending.append(target)
         return found
 
+    def discovered(self, header):
+        """Libraries the Arduino builder finds from one root header.
+
+        The builder resolves a missing include to a library only by a header
+        at the root of its src folder, so only includes between root headers
+        are followed.
+        """
+        found, seen, pending = set(), set(), [header]
+        while pending:
+            path = pending.pop()
+            if path in seen:
+                continue
+            seen.add(path)
+            for library in self.libraries:
+                if path.parent == library.src:
+                    found.add(library.name)
+            for quote, include in INCLUDE.findall(read(path)):
+                target = self.resolve(include, quote, path)
+                if target and any(target.parent == library.src for library in self.libraries):
+                    pending.append(target)
+        return found
+
     def qualified_names(self, sources):
         found = set()
         for path in sources:
@@ -154,11 +177,12 @@ class Scanner:
         sources = list(project_sources(project))
         needed = self.closure(sources, False) | self.qualified_names(sources)
 
-        pulls = {}
+        pulls, discovers = {}, {}
         for library in self.libraries:
             for module, header in library.root_headers.items():
                 pulls[(library.name, module)] = \
                     self.closure([library.src / header], True) | {(library.name, module)}
+                discovers[(library.name, module)] = self.discovered(library.src / header)
 
         # Keep a module header only when no other kept header already pulls it.
         keep = set(needed)
@@ -172,11 +196,15 @@ class Scanner:
         # BuildSettings is internal: it is never suggested to users.
         keep = {m for m in keep if m[1] != SETTINGS}
 
-        # One public root header per library in use, for Arduino library
-        # discovery: the lightest module header among the modules it uses, or
-        # the lightest module header of the library when only its version or
-        # settings are used.
-        for name in sorted({n for n, _ in used} - {n for n, _ in keep}):
+        # The Arduino builder discovers a library only through a header at the
+        # root of its src folder. A library that the kept headers do not reach
+        # through root headers alone gets one public root header: the lightest module header
+        # among the modules it uses, or the lightest module header of the
+        # library when only its version or settings are used.
+        discovered = set()
+        for module in keep:
+            discovered |= discovers.get(module, {module[0]})
+        for name in sorted({n for n, _ in used} - discovered):
             candidates = [m for n, m in used if n == name and m != SETTINGS] or \
                 [m for n, m in pulls if n == name and m != SETTINGS]
             candidates.sort(key=lambda m: (len(pulls[(name, m)]), m))
@@ -189,13 +217,14 @@ class Scanner:
 
 
 def find_libraries(folder):
-    libraries = []
+    libraries = {}
     for child in sorted(folder.iterdir()):
         if child.is_dir():
             library = Library.find(child)
-            if library:
-                libraries.append(library)
-    return libraries
+            # A symbolic link to a library already found is the same library.
+            if library and library.src not in libraries:
+                libraries[library.src] = library
+    return list(libraries.values())
 
 
 def main(argv):
