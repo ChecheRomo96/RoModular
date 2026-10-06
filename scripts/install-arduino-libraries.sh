@@ -6,8 +6,9 @@ SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROMODULAR_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
 
-# Runtime libraries in dependency order.
-LIBRARIES="Foundation DspCore MCC MIDILAR"
+# Runtime libraries in dependency order. CPSTL comes first: it is the base
+# of the chain, and Foundation is planned to build on it.
+LIBRARIES="CPSTL Foundation DspCore MCC MIDILAR"
 
 # Branch to install when a clone may be on another one. MIDILAR clones made
 # before 0.2.0 tracked `rebuild`; they are switched back to `main`.
@@ -174,4 +175,5 @@ if [ "$SKIPPED" -eq 0 ]; then
 else
     printf 'Arduino libraries installed; the clones warned about above were not updated.\n'
 fi
-printf 'DspCore, MCC and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs).\n'
+printf 'DspCore and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs);\n'
+printf 'CPSTL, Foundation and MCC build with the stock C++11 core.\n'

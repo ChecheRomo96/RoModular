@@ -15,7 +15,10 @@
  *
  * Foundation is the lowest runtime layer currently shared by RoModular
  * libraries. It targets desktop and embedded systems without depending on any
- * music-domain repository. Its own documentation is authoritative for API,
+ * music-domain repository. It is planned to build on
+ * @ref RoModular_Repositories_CPSTL "CPSTL" for its `std` vocabulary instead
+ * of reimplementing `std` types; until then it has no RoModular library
+ * dependency. Its own documentation is authoritative for API,
  * platform support, packages, examples, testing, and known limitations.
  */
 
