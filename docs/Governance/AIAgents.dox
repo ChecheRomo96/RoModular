@@ -72,6 +72,7 @@
  *
  * @code{.text}
  * GitHub/
+ * |-- CPSTL/
  * |-- DspCore/
  * |-- Foundation/
  * |-- MCC/
@@ -121,6 +122,7 @@
  * | ---------- | ------------ | ----------------------- |
  * | RoModularAgents | Implemented | Owns the canonical contract, adapters, and skills |
  * | RoModular | Implemented | Loads the sibling guidance conditionally |
+ * | CPSTL | Implemented | Loads the sibling guidance conditionally |
  * | Foundation | Implemented | Loads the sibling guidance conditionally |
  * | MusicCompositionCore | Implemented | Loads the sibling guidance conditionally |
  * | MIDILAR | Implemented | Loads guidance while retaining a legacy fallback |
