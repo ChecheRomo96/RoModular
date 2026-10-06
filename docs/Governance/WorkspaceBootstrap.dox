@@ -25,6 +25,7 @@
  * | `RoModular` | Ecosystem portal and governance |
  * | `RoModularAgents` | Provider-neutral agent contracts, adapters, and skills |
  * | `RoModularBuild` | Shared build infrastructure |
+ * | `CPSTL` | Portable `std` vocabulary (Cross-Platform STL) |
  * | `Foundation` | Low-level C++ library |
  * | `DspCore` | Signal-processing library |
  * | `MCC` | Music Composition Core |
@@ -55,6 +56,7 @@
  * |-- RoModular/
  * |-- RoModularAgents/
  * |-- RoModularBuild/
+ * |-- CPSTL/
  * |-- Foundation/
  * |-- DspCore/
  * |-- MCC/
@@ -169,7 +171,9 @@
  * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
  * @endcode
  *
- * Foundation, DspCore, MCC and MIDILAR are installed, in dependency order.
+ * CPSTL, Foundation, DspCore, MCC and MIDILAR are installed, in dependency
+ * order. CPSTL has no tagged release yet; like the other libraries it is
+ * cloned at the latest commit of its default branch.
  * A MIDILAR clone made before release 0.2.0, which tracked the `rebuild`
  * branch, is switched back to `main`. Each library is a Git clone named
  * after its Arduino library. Running the script again fast-forwards every
@@ -182,8 +186,9 @@
  * header of each library it uses, such as `<MCC.h>` or `<MIDILAR_Devices.h>`.
  * MCC and MIDILAR headers bring in the libraries they depend on; with older
  * releases, or with DspCore, the sketch also includes `<Foundation.h>` and
- * each dependency. DspCore, MCC and MIDILAR on the Arduino AVR core require
- * `-std=gnu++17`.
+ * each dependency. DspCore and MIDILAR on the Arduino AVR core require
+ * `-std=gnu++17`; CPSTL, Foundation and MCC build with the core's default
+ * C++11 mode.
  *
  * @section RoModularWorkspaceBootstrapScan Project Scan
  *

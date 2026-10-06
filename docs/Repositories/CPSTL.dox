@@ -1,0 +1,24 @@
+/**
+ * @defgroup RoModular_Repositories_CPSTL CPSTL
+ * @ingroup RoModular_Repositories
+ * @brief Portable std vocabulary: containers, strings, functional, traits and algorithms.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Role | The `std` interface (`cpstd::vector`, `string`, `stack`, `queue`, `function`, type traits, iterators, algorithms) on targets with or without a C++ standard library |
+ * | Status | Version `1.1.0` rescue in progress; no tagged release yet |
+ * | Source | [ChecheRomo96/CPSTL](https://github.com/ChecheRomo96/CPSTL) |
+ * | Runtime dependencies | None |
+ * | Build infrastructure | RoModularBuild `v0.4.0` |
+ * | Public CMake target | `CPSTL::CPSTL` |
+ *
+ * CPSTL is the bottom of the planned dependency chain
+ * `CPSTL <- Foundation <- (DspCore, MCC) <- MIDILAR`. With `CPSTL_USING_STL`
+ * every `cpstd` name is an alias of its `std` counterpart; on targets without
+ * a C++ standard library, such as AVR, CPSTL provides its own C++11
+ * implementation that never throws. Foundation is planned to build on CPSTL
+ * for its `std` vocabulary instead of reimplementing `std` types. Until its
+ * first tag this portal does not advertise a CPSTL release. The repository's
+ * own README and changelog are authoritative for its API, configuration and
+ * validation evidence.
+ */

@@ -4,7 +4,7 @@ Clones the RoModular Arduino libraries into an Arduino libraries folder, or
 brings existing clones up to date.
 
 .DESCRIPTION
-Installs Foundation, DspCore, MCC and MIDILAR, in dependency order, from the
+Installs CPSTL, Foundation, DspCore, MCC and MIDILAR, in dependency order, from the
 origins listed in the workspace repository manifest. Existing clones with the
 expected origin are fast-forwarded to the latest commit of their branch;
 clones with local changes or diverged history are reported and left as they
@@ -37,8 +37,9 @@ $ErrorActionPreference = "Stop"
 $RoModularRoot = Split-Path -Parent $PSScriptRoot
 $Manifest = Join-Path $RoModularRoot ".romodular/workspace/repositories.txt"
 
-# Runtime libraries in dependency order.
-$Libraries = @("Foundation", "DspCore", "MCC", "MIDILAR")
+# Runtime libraries in dependency order. CPSTL comes first: it is the base
+# of the chain, and Foundation is planned to build on it.
+$Libraries = @("CPSTL", "Foundation", "DspCore", "MCC", "MIDILAR")
 
 # Branch to install when a clone may be on another one. MIDILAR clones made
 # before 0.2.0 tracked `rebuild`; they are switched back to `main`.
@@ -206,4 +207,5 @@ if ($Skipped) {
 else {
     Write-Host "Arduino libraries installed and up to date."
 }
-Write-Host "DspCore, MCC and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs)."
+Write-Host "DspCore and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs);"
+Write-Host "CPSTL, Foundation and MCC build with the stock C++11 core."
