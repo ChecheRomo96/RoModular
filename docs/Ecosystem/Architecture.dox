@@ -12,31 +12,37 @@
  *   portal [label="RoModular\necosystem documentation", fillcolor="#dce9ff"];
  *   agents [label="RoModularAgents\nagent contracts and skills", fillcolor="#e8e0ff"];
  *   build [label="RoModularBuild\nbuild and CI infrastructure"];
+ *   cpstl [label="CPSTL\nportable std vocabulary"];
  *   foundation [label="Foundation\nportable C++ base library"];
  *   mcc [label="MusicCompositionCore (MCC)\nmusic-theory library"];
  *   dsp [label="DspCore\nsignal-processing library"];
- *   midilar [label="MIDILAR\nMIDI and music systems", style="rounded,dashed,filled", fillcolor="#f5f5f5"];
+ *   midilar [label="MIDILAR\nMIDI and music systems"];
  *
  *   portal -> agents [style=dotted, label="documents"];
  *   portal -> build [style=dotted, label="documents"];
+ *   portal -> cpstl [style=dotted, label="documents"];
  *   portal -> foundation [style=dotted, label="documents"];
  *   portal -> mcc [style=dotted, label="documents"];
  *   portal -> dsp [style=dotted, label="documents"];
  *   portal -> midilar [style=dotted, label="documents"];
  *
+ *   build -> cpstl [label="pinned build contract"];
  *   build -> foundation [label="pinned build contract"];
  *   build -> mcc [label="pinned build contract"];
  *   build -> dsp [label="pinned build contract"];
+ *   build -> midilar [label="pinned build contract"];
  *   agents -> portal [style=dotted, label="guides"];
  *   agents -> build [style=dotted, label="guides"];
+ *   agents -> cpstl [style=dotted, label="guides"];
  *   agents -> foundation [style=dotted, label="guides"];
  *   agents -> mcc [style=dotted, label="guides"];
  *   agents -> dsp [style=dotted, label="guides"];
  *   agents -> midilar [style=dotted, label="guides"];
+ *   cpstl -> foundation [style=dashed, label="planned std vocabulary"];
  *   foundation -> mcc [label="public C++ dependency"];
  *   foundation -> dsp [label="public C++ dependency"];
- *   foundation -> midilar [style=dashed, label="planned base"];
- *   mcc -> midilar [style=dashed, label="planned musical model"];
+ *   foundation -> midilar [label="public C++ dependency"];
+ *   mcc -> midilar [label="public C++ dependency"];
  *   dsp -> midilar [style=dashed, label="planned signal processing"];
  * }
  * @enddot
@@ -48,7 +54,11 @@
  *
  * @section RoModularArchitectureRules Dependency Rules
  *
- * - Libraries depend downward on smaller, more general libraries.
+ * - Libraries depend downward on smaller, more general libraries, along
+ *   `CPSTL <- Foundation <- (DspCore, MCC) <- MIDILAR`.
+ * - CPSTL provides only the portable `std` vocabulary and depends on no other
+ *   RoModular library. In STL mode its names alias `std`; on targets without
+ *   a C++ standard library, such as AVR, it supplies its own implementation.
  * - Foundation contains no music-domain concepts.
  * - MCC contains music theory but no MIDI protocol or device behavior.
  * - DspCore contains signal processing but no MIDI or music-theory concepts.

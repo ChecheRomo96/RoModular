@@ -24,8 +24,9 @@
  * | ---------- | ------ | ------------------------ |
  * | RoModular | Active | Publish and maintain the ecosystem portal |
  * | RoModularAgents | Active | Maintain the canonical guidance installed by the workspace bootstrap validated on macOS and Windows |
- * | RoModularBuild | Active | Stabilize the shared profiles already consumed by Foundation and MCC |
- * | Foundation | Stable | Continue evidence-based 1.x maintenance |
+ * | RoModularBuild | Active | Stabilize the shared profiles already consumed by CPSTL, Foundation, DspCore, MCC and MIDILAR |
+ * | CPSTL | Active | Finish the 1.1.0 rescue (stack and queue added) so Foundation can build on it |
+ * | Foundation | Stable | Continue evidence-based 1.x maintenance; next, depend on CPSTL for the `std` vocabulary |
  * | DspCore | Active | Build signal processing phase by phase on the 0.1.0 scaffold |
  * | MusicCompositionCore | Active | Continue the reconstruction on its validated Foundation and RoModularBuild baseline |
  * | MIDILAR | Active | Released `0.2.0`; continue `ACTION_PLAN.md` (MIDI-CI deferred) and separate transport libraries on request |
