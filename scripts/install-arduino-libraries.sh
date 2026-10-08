@@ -186,4 +186,4 @@ if [ "$SKIPPED" -eq 0 ]; then
 else
     printf 'Arduino libraries installed; the clones warned about above were not updated.\n'
 fi
-printf 'DspCore, MCC and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs).\n'
+printf 'Installed libraries support stock Arduino C++11 source builds; see each README for non-Arduino requirements.\n'

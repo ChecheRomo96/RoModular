@@ -30,7 +30,13 @@ jobs:
 
       - name: Validate shell syntax
         shell: bash
-        run: sh -n scripts/bootstrap-workspace.sh
+        run: |
+          sh -n scripts/bootstrap-workspace.sh
+          sh -n scripts/romodular.sh
+
+      - name: Test read-only workspace CLI
+        shell: bash
+        run: ./tests/test-romodular-cli.sh
 
       - name: Configure test workspace
         shell: bash
@@ -75,6 +81,10 @@ jobs:
         with:
           repository: ChecheRomo96/RoModularAgents
           path: .ci-workspace/RoModularAgents
+
+      - name: Test read-only workspace CLI
+        shell: pwsh
+        run: ./tests/test-romodular-cli.ps1
 
       - name: Configure test workspace
         shell: pwsh
