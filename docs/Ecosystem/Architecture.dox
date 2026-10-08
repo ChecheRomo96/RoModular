@@ -35,15 +35,14 @@
  *   agents -> midilar [style=dotted, label="guides"];
  *   foundation -> mcc [label="public C++ dependency"];
  *   foundation -> dsp [label="public C++ dependency"];
- *   foundation -> midilar [style=dashed, label="planned base"];
- *   mcc -> midilar [style=dashed, label="planned musical model"];
- *   dsp -> midilar [style=dashed, label="planned signal processing"];
+ *   foundation -> midilar [label="public C++ dependency"];
+ *   mcc -> midilar [label="public C++ dependency"];
+ *   dsp -> midilar [label="public C++ dependency"];
  * }
  * @enddot
  *
- * Solid arrows describe validated relationships. Dashed arrows describe the
- * intended direction for work that has not yet passed its repository-specific
- * acceptance gates. Dotted arrows mean that this portal catalogs a project;
+ * Solid arrows describe validated relationships. Dashed arrows describe
+ * planned relationships. Dotted arrows mean that this portal catalogs a project;
  * they do not imply a source or package dependency.
  *
  * @section RoModularArchitectureRules Dependency Rules
