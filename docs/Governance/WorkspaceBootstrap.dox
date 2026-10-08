@@ -169,7 +169,7 @@
  * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
  * @endcode
  *
- * CPSTL, Foundation, MCC and MIDILAR are installed in dependency order at
+ * CPSTL, Foundation, DspCore, MCC and MIDILAR are installed in dependency order at
  * the immutable tags in `.romodular/workspace/release-pins.txt`. Each library
  * is a Git clone named after its Arduino library. Running the script again
  * restores a clean clone to its declared tag; clones with local changes are

@@ -4,7 +4,7 @@ Clones the RoModular Arduino libraries into an Arduino libraries folder, or
 brings existing clones up to date.
 
 .DESCRIPTION
-Installs released CPSTL, Foundation, MCC and MIDILAR in dependency order from
+Installs released CPSTL, Foundation, DspCore, MCC and MIDILAR in dependency order from
 the immutable tags in the release-pins manifest. -UseHead is the explicit
 development opt-in: it installs the main branches and includes DspCore.
 Existing clones with local changes are reported and left as they are. Any
@@ -44,7 +44,7 @@ $PinsManifest = Join-Path $RoModularRoot ".romodular/workspace/release-pins.txt"
 
 # Released Arduino libraries in dependency order. DspCore is included only by
 # -UseHead until it has a release tag.
-$StableLibraries = @("CPSTL", "Foundation", "MCC", "MIDILAR")
+$StableLibraries = @("CPSTL", "Foundation", "DspCore", "MCC", "MIDILAR")
 $HeadLibraries = @("CPSTL", "Foundation", "DspCore", "MCC", "MIDILAR")
 
 if ($null -eq (Get-Command git -ErrorAction SilentlyContinue)) {
