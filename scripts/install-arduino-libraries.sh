@@ -5,26 +5,22 @@ set -eu
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 ROMODULAR_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
+PINS_MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/release-pins.txt"
 
-# Runtime libraries in dependency order.
-LIBRARIES="Foundation DspCore MCC MIDILAR"
-
-# Branch to install when a clone may be on another one. MIDILAR clones made
-# before 0.2.0 tracked `rebuild`; they are switched back to `main`.
-library_branch() {
-    case "$1" in
-        MIDILAR) printf '%s' main ;;
-        *) printf '' ;;
-    esac
-}
+# Released Arduino libraries, in dependency order.  DspCore is deliberately
+# excluded until it has a release tag; --use-head is the explicit development
+# opt-in and includes it.
+STABLE_LIBRARIES="CPSTL Foundation MCC MIDILAR"
+HEAD_LIBRARIES="CPSTL Foundation DspCore MCC MIDILAR"
 
 LIBRARIES_ROOT=
 FORCE=0
 DRY_RUN=0
+USE_HEAD=0
 
 usage() {
     printf '%s\n' \
-        "Usage: $0 <arduino-libraries-path> [--force] [--dry-run]" \
+        "Usage: $0 <arduino-libraries-path> [--force] [--dry-run] [--use-head]" \
         "" \
         "Clone the RoModular Arduino libraries into an Arduino libraries folder," \
         "or bring existing clones up to date." \
@@ -32,6 +28,7 @@ usage() {
         "Options:" \
         "  --force            Replace existing library folders that are not the expected clone." \
         "  --dry-run          Print planned actions without changing the filesystem." \
+        "  --use-head         Install development heads instead of the release pins." \
         "  -h, --help         Show this help text." \
         "" \
         "--include-legacy is still accepted and ignored: MIDILAR is always installed."
@@ -46,12 +43,12 @@ normalize_git_origin() {
     printf '%s' "$1" | sed -e 's#/*$##' -e 's#\.git$##'
 }
 
-# Fast-forwards a clean clone to the latest commit of its branch. Clones with
-# local changes or diverged history are reported and left as they are.
+# Moves a clean clone to an immutable tag, or fast-forwards it to a development
+# branch when --use-head is selected.  Local changes are never overwritten.
 update_clone() {
     LIBRARY=$1
     LIBRARY_PATH=$2
-    BRANCH=$3
+    REF=$3
 
     if [ -n "$(git -C "$LIBRARY_PATH" status --porcelain)" ]; then
         printf 'warning: %s has local changes; not updated\n' "$LIBRARY" >&2
@@ -59,36 +56,36 @@ update_clone() {
         return 0
     fi
     if [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] update %s%s\n' "$LIBRARY" "${BRANCH:+ to branch $BRANCH}"
+        printf '[dry-run] update %s to %s\n' "$LIBRARY" "$REF"
         return 0
     fi
-    if ! git -C "$LIBRARY_PATH" fetch --quiet origin; then
+    if ! git -C "$LIBRARY_PATH" fetch --quiet --tags origin; then
         printf 'error: fetch failed for %s\n' "$LIBRARY" >&2
         FAILED=1
         return 0
     fi
-    if [ -z "$BRANCH" ]; then
-        BRANCH=$(git -C "$LIBRARY_PATH" symbolic-ref --quiet --short HEAD || true)
-        if [ -z "$BRANCH" ]; then
-            printf 'warning: %s is not on a branch; not updated\n' "$LIBRARY" >&2
-            SKIPPED=1
-            return 0
-        fi
-    fi
-    if [ "$(git -C "$LIBRARY_PATH" symbolic-ref --quiet --short HEAD || true)" != "$BRANCH" ]; then
-        if ! git -C "$LIBRARY_PATH" checkout --quiet "$BRANCH" 2>/dev/null &&
-           ! git -C "$LIBRARY_PATH" checkout --quiet -b "$BRANCH" --track "origin/$BRANCH"; then
-            printf 'error: cannot switch %s to branch %s\n' "$LIBRARY" "$BRANCH" >&2
+    if [ "$USE_HEAD" -eq 0 ]; then
+        if ! git -C "$LIBRARY_PATH" rev-parse --verify --quiet "refs/tags/$REF^{commit}" >/dev/null; then
+            printf 'error: tag %s was not found for %s\n' "$REF" "$LIBRARY" >&2
             FAILED=1
             return 0
         fi
+        git -C "$LIBRARY_PATH" checkout --quiet --detach "$REF"
+        printf 'pinned: %s (%s at %s)\n' "$LIBRARY" "$REF" "$(git -C "$LIBRARY_PATH" rev-parse --short HEAD)"
+    else
+        if ! git -C "$LIBRARY_PATH" checkout --quiet "$REF" 2>/dev/null &&
+           ! git -C "$LIBRARY_PATH" checkout --quiet -b "$REF" --track "origin/$REF"; then
+            printf 'error: cannot switch %s to branch %s\n' "$LIBRARY" "$REF" >&2
+            FAILED=1
+            return 0
+        fi
+        if ! git -C "$LIBRARY_PATH" merge --quiet --ff-only "origin/$REF"; then
+            printf 'warning: %s has commits not on origin/%s; not updated\n' "$LIBRARY" "$REF" >&2
+            SKIPPED=1
+            return 0
+        fi
+        printf 'updated: %s (%s at %s)\n' "$LIBRARY" "$REF" "$(git -C "$LIBRARY_PATH" rev-parse --short HEAD)"
     fi
-    if ! git -C "$LIBRARY_PATH" merge --quiet --ff-only "origin/$BRANCH"; then
-        printf 'warning: %s has commits not on origin/%s; not updated\n' "$LIBRARY" "$BRANCH" >&2
-        SKIPPED=1
-        return 0
-    fi
-    printf 'updated: %s (%s at %s)\n' "$LIBRARY" "$BRANCH" "$(git -C "$LIBRARY_PATH" rev-parse --short HEAD)"
 }
 
 while [ "$#" -gt 0 ]; do
@@ -96,6 +93,7 @@ while [ "$#" -gt 0 ]; do
         --include-legacy) shift ;;
         --force) FORCE=1; shift ;;
         --dry-run) DRY_RUN=1; shift ;;
+        --use-head) USE_HEAD=1; shift ;;
         -h|--help) usage; exit 0 ;;
         -*) fail "unknown argument: $1" ;;
         *)
@@ -109,6 +107,15 @@ done
 [ -n "$LIBRARIES_ROOT" ] || { usage >&2; exit 1; }
 command -v git >/dev/null 2>&1 || fail "Git is required but was not found on PATH"
 [ -f "$MANIFEST" ] || fail "repository manifest not found: $MANIFEST"
+[ -f "$PINS_MANIFEST" ] || fail "release pins manifest not found: $PINS_MANIFEST"
+
+if [ "$USE_HEAD" -eq 0 ]; then
+    LIBRARIES=$STABLE_LIBRARIES
+    MODE_NOTE="release pins"
+else
+    LIBRARIES=$HEAD_LIBRARIES
+    MODE_NOTE="development heads"
+fi
 
 case "$LIBRARIES_ROOT" in
     /*) ;;
@@ -117,7 +124,7 @@ case "$LIBRARIES_ROOT" in
     *) LIBRARIES_ROOT=$(pwd)/$LIBRARIES_ROOT ;;
 esac
 
-printf 'Arduino libraries: %s\n' "$LIBRARIES_ROOT"
+printf 'Arduino libraries: %s (%s)\n' "$LIBRARIES_ROOT" "$MODE_NOTE"
 if [ "$DRY_RUN" -eq 0 ]; then
     mkdir -p "$LIBRARIES_ROOT"
 fi
@@ -133,7 +140,12 @@ for LIBRARY in $LIBRARIES; do
     fi
 
     LIBRARY_PATH="$LIBRARIES_ROOT/$LIBRARY"
-    BRANCH=$(library_branch "$LIBRARY")
+    if [ "$USE_HEAD" -eq 0 ]; then
+        REF=$(tr -d '\r' < "$PINS_MANIFEST" | awk -F'|' -v name="$LIBRARY" '$1 == name { print $2 }')
+        [ -n "$REF" ] || { printf 'error: %s is missing from %s\n' "$LIBRARY" "$PINS_MANIFEST" >&2; FAILED=1; continue; }
+    else
+        REF=main
+    fi
 
     if [ -e "$LIBRARY_PATH" ]; then
         ACTUAL_ORIGIN=
@@ -142,7 +154,7 @@ for LIBRARY in $LIBRARIES; do
         fi
         if [ -n "$ACTUAL_ORIGIN" ] && \
            [ "$(normalize_git_origin "$ACTUAL_ORIGIN")" = "$(normalize_git_origin "$ORIGIN")" ]; then
-            update_clone "$LIBRARY" "$LIBRARY_PATH" "$BRANCH"
+            update_clone "$LIBRARY" "$LIBRARY_PATH" "$REF"
             continue
         fi
         if [ "$FORCE" -ne 1 ]; then
@@ -157,12 +169,12 @@ for LIBRARY in $LIBRARIES; do
         fi
         rm -rf -- "$LIBRARY_PATH"
     elif [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] clone %s%s into %s\n' "$ORIGIN" "${BRANCH:+ (branch $BRANCH)}" "$LIBRARY_PATH"
+        printf '[dry-run] clone %s (%s) into %s\n' "$ORIGIN" "$REF" "$LIBRARY_PATH"
         continue
     fi
 
-    printf 'cloning: %s%s\n' "$LIBRARY" "${BRANCH:+ (branch $BRANCH)}"
-    if ! git clone ${BRANCH:+--branch "$BRANCH"} "$ORIGIN" "$LIBRARY_PATH"; then
+    printf 'cloning: %s (%s)\n' "$LIBRARY" "$REF"
+    if ! git clone --branch "$REF" "$ORIGIN" "$LIBRARY_PATH"; then
         printf 'error: clone failed for %s\n' "$LIBRARY" >&2
         FAILED=1
     fi
@@ -170,7 +182,7 @@ done
 
 [ "$FAILED" -eq 0 ] || fail "Arduino library installation completed with errors"
 if [ "$SKIPPED" -eq 0 ]; then
-    printf 'Arduino libraries installed and up to date.\n'
+    printf 'Arduino libraries installed and at the requested references.\n'
 else
     printf 'Arduino libraries installed; the clones warned about above were not updated.\n'
 fi

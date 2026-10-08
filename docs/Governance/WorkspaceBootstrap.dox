@@ -169,20 +169,20 @@
  * ./scripts/install-arduino-libraries.ps1 "$HOME\Documents\Arduino\libraries"
  * @endcode
  *
- * Foundation, DspCore, MCC and MIDILAR are installed, in dependency order.
- * A MIDILAR clone made before release 0.2.0, which tracked the `rebuild`
- * branch, is switched back to `main`. Each library is a Git clone named
- * after its Arduino library. Running the script again fast-forwards every
- * existing clone with the expected `origin` to the latest commit of its
- * branch; clones with local changes or diverged history are reported and
- * left as they are. Any other existing folder is refused unless `--force` or
- * `-Force` replaces it. `--include-legacy` and `-IncludeLegacy` are still
- * accepted and have no effect.
- * `--dry-run` or `-DryRun` previews the operation. A sketch includes a
- * header of each library it uses, such as `<MCC.h>` or `<MIDILAR_Devices.h>`.
- * MCC and MIDILAR headers bring in the libraries they depend on; with older
- * releases, or with DspCore, the sketch also includes `<Foundation.h>` and
- * each dependency. DspCore, MCC and MIDILAR on the Arduino AVR core require
+ * CPSTL, Foundation, MCC and MIDILAR are installed in dependency order at
+ * the immutable tags in `.romodular/workspace/release-pins.txt`. Each library
+ * is a Git clone named after its Arduino library. Running the script again
+ * restores a clean clone to its declared tag; clones with local changes are
+ * reported and left as they are. Any other existing folder is refused unless
+ * `--force` or `-Force` replaces it. `--use-head` or `-UseHead` is the
+ * explicit development opt-in: it tracks `main` and also includes unreleased
+ * DspCore. `--include-legacy` and `-IncludeLegacy` are still accepted and
+ * have no effect. `--dry-run` or `-DryRun` previews the operation. A sketch
+ * includes a header of each library it uses, such as `<MCC.h>` or
+ * `<MIDILAR_Devices.h>`. MCC and MIDILAR headers bring in the libraries they
+ * depend on; with older releases, or with DspCore, the sketch also includes
+ * `<Foundation.h>` and each dependency. DspCore, MCC and MIDILAR on the
+ * Arduino AVR core require
  * `-std=gnu++17`.
  *
  * @section RoModularWorkspaceBootstrapScan Project Scan
