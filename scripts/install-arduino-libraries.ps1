@@ -42,8 +42,7 @@ $RoModularRoot = Split-Path -Parent $PSScriptRoot
 $Manifest = Join-Path $RoModularRoot ".romodular/workspace/repositories.txt"
 $PinsManifest = Join-Path $RoModularRoot ".romodular/workspace/release-pins.txt"
 
-# Released Arduino libraries in dependency order. DspCore is included only by
-# -UseHead until it has a release tag.
+# Released Arduino libraries in dependency order.
 $StableLibraries = @("CPSTL", "Foundation", "DspCore", "MCC", "MIDILAR")
 $HeadLibraries = @("CPSTL", "Foundation", "DspCore", "MCC", "MIDILAR")
 
@@ -229,4 +228,4 @@ if ($Skipped) {
 else {
     Write-Host "Arduino libraries installed and at the requested references."
 }
-Write-Host "DspCore, MCC and MIDILAR on Arduino AVR require -std=gnu++17 (see their READMEs)."
+Write-Host "Installed libraries support stock Arduino C++11 source builds; see each README for non-Arduino requirements."
