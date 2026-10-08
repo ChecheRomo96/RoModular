@@ -7,9 +7,8 @@ ROMODULAR_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
 PINS_MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/release-pins.txt"
 
-# Released Arduino libraries, in dependency order.  DspCore is deliberately
-# excluded until it has a release tag; --use-head is the explicit development
-# opt-in and includes it.
+# Released Arduino libraries, in dependency order. --use-head is the explicit
+# development opt-in and tracks their main branches.
 STABLE_LIBRARIES="CPSTL Foundation DspCore MCC MIDILAR"
 HEAD_LIBRARIES="CPSTL Foundation DspCore MCC MIDILAR"
 
