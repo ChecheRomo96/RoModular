@@ -8,11 +8,12 @@
  * | Role | Portable signal processing without MIDI or music-theory concepts |
  * | Status | Version `0.1.0` scaffold; no release yet |
  * | Source | [ChecheRomo96/DspCore](https://github.com/ChecheRomo96/DspCore) |
- * | Runtime dependencies | Foundation `1.4.0` or a newer 1.x release |
+ * | Runtime dependencies | Foundation `2.0.5` or a newer 2.x release |
  * | Public CMake target | `DspCore::DspCore` |
  *
  * DspCore takes over the signal-processing module that lived inside legacy
  * MIDILAR. It is built phase by phase on the same pinned RoModularBuild
- * `v0.4.0` as Foundation and MCC, and MIDILAR will consume it. Until its first
+ * `v0.4.0` as Foundation and MCC, and MIDILAR consumes it starting with DspCore
+ * `v0.1.0`.
  * tag this portal does not advertise a DspCore release.
  */
