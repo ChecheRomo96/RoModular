@@ -10,7 +10,7 @@ PINS_MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/release-pins.txt"
 # Released Arduino libraries, in dependency order.  DspCore is deliberately
 # excluded until it has a release tag; --use-head is the explicit development
 # opt-in and includes it.
-STABLE_LIBRARIES="CPSTL Foundation MCC MIDILAR"
+STABLE_LIBRARIES="CPSTL Foundation DspCore MCC MIDILAR"
 HEAD_LIBRARIES="CPSTL Foundation DspCore MCC MIDILAR"
 
 LIBRARIES_ROOT=
