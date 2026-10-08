@@ -6,17 +6,18 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | MIDI protocol data, parsing, routing, timing, transports and devices |
- * | Current release | [`v0.2.0`](https://github.com/ChecheRomo96/MIDILAR/releases/tag/v0.2.0) |
+ * | Current release | [`v0.3.1`](https://github.com/ChecheRomo96/MIDILAR/releases/tag/v0.3.1) |
  * | Status | Active; MIDI-CI deferred |
  * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR) |
  * | Documentation | [MIDILAR on GitHub Pages](https://checheromo96.github.io/MIDILAR/) |
- * | Runtime dependencies | Foundation `2.0.5` or a newer 2.x release, DspCore `0.1.0` or a newer 0.x release, MCC `0.6.0` or a newer 0.x release |
+ * | Runtime dependencies | Foundation `2.0.5` or a newer 2.x release, DspCore `0.1.1` or a newer 0.x release, MCC `0.6.0` or a newer 0.x release |
  * | Public CMake target | `MIDILAR::MIDILAR` |
  *
  * The legacy implementation had no consumers and was removed. MIDILAR was
  * rebuilt phase by phase from a MIDI-domain specification, on the same pinned
  * RoModularBuild `v0.4.0` as Foundation and MCC, and validated on an Arduino
- * Mega 2560. Release `0.2.0` contains:
+ * Mega 2560. Release `0.3.1` includes stock Arduino C++11 source
+ * compatibility and the previously released protocol and device features:
  *
  * - Protocol: channels, groups and masks; note, controller and program
  *   numbers; values at MIDI 2.0 resolution; UMP packets; MIDI 1.0 byte-stream

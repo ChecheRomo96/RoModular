@@ -2,6 +2,6 @@
 # Default installer input.  Keep entries in dependency order.
 CPSTL|v1.1.5
 Foundation|v2.0.5
-DspCore|v0.1.0
+DspCore|v0.1.1
 MCC|v0.6.0
-MIDILAR|v0.3.0
+MIDILAR|v0.3.1
