@@ -25,6 +25,7 @@
  * | `RoModular` | Ecosystem portal and governance |
  * | `RoModularAgents` | Provider-neutral agent contracts, adapters, and skills |
  * | `RoModularBuild` | Shared build infrastructure |
+ * | `CPSTL` | Cross-platform STL for hosted and freestanding C++ |
  * | `Foundation` | Low-level C++ library |
  * | `DspCore` | Signal-processing library |
  * | `MCC` | Music Composition Core |
@@ -181,9 +182,27 @@
  * includes a header of each library it uses, such as `<MCC.h>` or
  * `<MIDILAR_Devices.h>`. MCC and MIDILAR headers bring in the libraries they
  * depend on; with older releases, or with DspCore, the sketch also includes
- * `<Foundation.h>` and each dependency. DspCore, MCC and MIDILAR on the
- * Arduino AVR core require
- * `-std=gnu++17`.
+ * `<Foundation.h>` and each dependency. CPSTL, Foundation, DspCore, MCC and
+ * MIDILAR Arduino source builds support stock C++11 cores; CMake and direct
+ * source integrations may have stricter requirements documented by their
+ * owning repository.
+ *
+ * @section RoModularWorkspaceCli Read-Only Workspace CLI
+ *
+ * `scripts/romodular.sh` and `scripts/romodular.ps1` provide the same initial
+ * host-side inspection commands for an existing workspace:
+ *
+ * @code{.sh}
+ * ./scripts/romodular.sh doctor --root ..
+ * ./scripts/romodular.sh status --root ..
+ * ./scripts/romodular.sh sync --dry-run --root ..
+ * @endcode
+ *
+ * The commands inspect local Git state and available host tools only. They do
+ * not fetch, pull, check out, reset, clean, merge, clone, or build anything.
+ * `sync --dry-run` is a plan-only command in this delivery. Repository-owned
+ * scripts and CMake presets remain authoritative for compilation, tests,
+ * packages, documentation, and MCU or board selection.
  *
  * @section RoModularWorkspaceBootstrapScan Project Scan
  *
