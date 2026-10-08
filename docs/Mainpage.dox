@@ -7,6 +7,11 @@
  * depend on one another, and which projects are stable, active, planned, or
  * retained only as legacy references.
  *
+ * The portal uses the Foundation-family Doxygen light/dark theme, search and
+ * navigation behavior. CPSTL, RoModularBuild and RoModularAgents retain their
+ * purpose-specific documentation workflows rather than being forced into an
+ * API reference.
+ *
  * @section RoModularMainStart Start Here
  *
  * - @ref RoModular_Ecosystem_Overview explains the scope and ownership model.
