@@ -1,0 +1,17 @@
+/**
+ * @defgroup RoModular_Repositories_CPSTL CPSTL
+ * @ingroup RoModular_Repositories
+ * @brief Portable C++ standard-library vocabulary for hosted and freestanding targets.
+ *
+ * | Field | Value |
+ * | ----- | ----- |
+ * | Role | Bottom layer: `cpstd` containers, algorithms, traits and utilities |
+ * | Current release | [`v1.1.5`](https://github.com/ChecheRomo96/CPSTL/releases/tag/v1.1.5) |
+ * | Source | [ChecheRomo96/CPSTL](https://github.com/ChecheRomo96/CPSTL) |
+ * | Documentation | [CPSTL on GitHub Pages](https://checheromo96.github.io/CPSTL/) |
+ * | Public CMake target | `CPSTL::CPSTL` |
+ *
+ * CPSTL is Foundation's portable standard vocabulary. It has no RoModular
+ * library dependency and supports both zero-cost aliases to `std` and its own
+ * freestanding C++11 implementation for targets such as AVR.
+ */

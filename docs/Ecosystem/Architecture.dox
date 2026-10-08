@@ -12,6 +12,7 @@
  *   portal [label="RoModular\necosystem documentation", fillcolor="#dce9ff"];
  *   agents [label="RoModularAgents\nagent contracts and skills", fillcolor="#e8e0ff"];
  *   build [label="RoModularBuild\nbuild and CI infrastructure"];
+ *   cpstl [label="CPSTL\nportable standard vocabulary"];
  *   foundation [label="Foundation\nportable C++ base library"];
  *   mcc [label="MusicCompositionCore (MCC)\nmusic-theory library"];
  *   dsp [label="DspCore\nsignal-processing library"];
@@ -20,19 +21,23 @@
  *   portal -> agents [style=dotted, label="documents"];
  *   portal -> build [style=dotted, label="documents"];
  *   portal -> foundation [style=dotted, label="documents"];
+ *   portal -> cpstl [style=dotted, label="documents"];
  *   portal -> mcc [style=dotted, label="documents"];
  *   portal -> dsp [style=dotted, label="documents"];
  *   portal -> midilar [style=dotted, label="documents"];
  *
  *   build -> foundation [label="pinned build contract"];
+ *   build -> cpstl [label="pinned build contract"];
  *   build -> mcc [label="pinned build contract"];
  *   build -> dsp [label="pinned build contract"];
  *   agents -> portal [style=dotted, label="guides"];
  *   agents -> build [style=dotted, label="guides"];
  *   agents -> foundation [style=dotted, label="guides"];
+ *   agents -> cpstl [style=dotted, label="guides"];
  *   agents -> mcc [style=dotted, label="guides"];
  *   agents -> dsp [style=dotted, label="guides"];
  *   agents -> midilar [style=dotted, label="guides"];
+ *   cpstl -> foundation [label="public C++ dependency"];
  *   foundation -> mcc [label="public C++ dependency"];
  *   foundation -> dsp [label="public C++ dependency"];
  *   foundation -> midilar [label="public C++ dependency"];
