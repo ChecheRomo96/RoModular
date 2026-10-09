@@ -185,7 +185,12 @@
  * `<Foundation.h>` and each dependency. CPSTL, Foundation, DspCore, MCC and
  * MIDILAR Arduino source builds support stock C++11 cores; CMake and direct
  * source integrations may have stricter requirements documented by their
- * owning repository.
+ * owning repository. `scripts/verify-release-pins.sh <libraries-path>` checks
+ * that an installed set exactly matches the manifest, that each
+ * `library.properties` version matches its tag, and that every declared
+ * Arduino dependency minimum is satisfied. Workspace CI runs that check after
+ * installation so incompatible release combinations cannot be published by
+ * the bootstrap workflow.
  *
  * @section RoModularWorkspaceCli Read-Only Workspace CLI
  *

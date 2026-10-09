@@ -29,7 +29,7 @@
  * | Foundation | Stable | Released 2.0.5 on CPSTL 1.1.5 |
  * | DspCore | Active | Build signal processing phase by phase on the 0.1.0 scaffold |
  * | MusicCompositionCore | Stable | Released 0.6.0 on Foundation 2.0.5 |
- * | MIDILAR | Stable | Released 0.3.0 with calibrated MIDI clock support |
+ * | MIDILAR | Stable | Released 0.3.1 with calibrated MIDI clock support |
  * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |
  *
  * @section RoModularDocumentationOwnership Documentation Ownership
