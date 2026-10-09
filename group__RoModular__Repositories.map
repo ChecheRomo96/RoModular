@@ -1,0 +1,11 @@
+<map id="Repositories" name="Repositories">
+<area shape="rect" id="Node000001" title="Source, documentation, ownership, dependencies, and status for every RoModular repository." alt="" coords="5,179,108,204"/>
+<area shape="rect" id="Node000008" href="$group__RoModular__Repositories__Agents.html" title="Provider&#45;neutral agent contracts, repository adapters, and reusable skills." alt="" coords="177,5,315,31"/>
+<area shape="rect" id="Node000009" href="$group__RoModular__Repositories__Build.html" title="Versioned build, toolchain, workflow, and CI infrastructure." alt="" coords="183,55,309,80"/>
+<area shape="rect" id="Node000002" href="$group__RoModular__Repositories__CPSTL.html" title="Portable C++ standard&#45;library vocabulary for hosted and freestanding targets." alt="" coords="215,104,277,129"/>
+<area shape="rect" id="Node000003" href="$group__RoModular__Repositories__DspCore.html" title="Lookup tables, interpolation, generators, filters and transforms." alt="" coords="207,153,285,179"/>
+<area shape="rect" id="Node000004" href="$group__RoModular__Repositories__Foundation.html" title="Portable C++ base library for desktop and embedded consumers." alt="" coords="199,203,293,228"/>
+<area shape="rect" id="Node000005" href="$group__RoModular__Repositories__MCC.html" title="Portable music&#45;theory and composition primitives." alt="" coords="156,253,336,293"/>
+<area shape="rect" id="Node000006" href="$group__RoModular__Repositories__MIDILAR.html" title="MIDI protocol, parsing, routing, timing and real&#45;time devices." alt="" coords="207,317,285,343"/>
+<area shape="rect" id="Node000007" href="$group__RoModular__Repositories__Portal.html" title="Ecosystem documentation and navigation portal." alt="" coords="200,367,292,392"/>
+</map>
