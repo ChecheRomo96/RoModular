@@ -60,12 +60,10 @@ jobs:
           ./scripts/install-arduino-libraries.sh "$RUNNER_TEMP/arduino-libraries"
           test -f "$RUNNER_TEMP/arduino-libraries/CPSTL/library.properties"
           test -f "$RUNNER_TEMP/arduino-libraries/Foundation/library.properties"
+          test -f "$RUNNER_TEMP/arduino-libraries/DspCore/library.properties"
           test -f "$RUNNER_TEMP/arduino-libraries/MCC/library.properties"
           test -f "$RUNNER_TEMP/arduino-libraries/MIDILAR/library.properties"
-          test "$(git -C "$RUNNER_TEMP/arduino-libraries/CPSTL" describe --exact-match --tags)" = v1.1.5
-          test "$(git -C "$RUNNER_TEMP/arduino-libraries/Foundation" describe --exact-match --tags)" = v2.0.5
-          test "$(git -C "$RUNNER_TEMP/arduino-libraries/MCC" describe --exact-match --tags)" = v0.6.0
-          test "$(git -C "$RUNNER_TEMP/arduino-libraries/MIDILAR" describe --exact-match --tags)" = v0.3.0
+          ./scripts/verify-release-pins.sh "$RUNNER_TEMP/arduino-libraries"
 
   windows:
     name: Windows / PowerShell bootstrap
@@ -106,18 +104,12 @@ jobs:
           $Libraries = Join-Path $env:RUNNER_TEMP "arduino-libraries"
           ./scripts/install-arduino-libraries.ps1 $Libraries
           ./scripts/install-arduino-libraries.ps1 $Libraries
-          foreach ($Library in "CPSTL", "Foundation", "MCC", "MIDILAR") {
+          foreach ($Library in "CPSTL", "Foundation", "DspCore", "MCC", "MIDILAR") {
             if (-not (Test-Path (Join-Path $Libraries "$Library/library.properties"))) {
               throw "$Library was not installed"
             }
           }
-          $ExpectedTags = @{ CPSTL = "v1.1.5"; Foundation = "v2.0.5"; MCC = "v0.6.0"; MIDILAR = "v0.3.0" }
-          foreach ($Library in $ExpectedTags.Keys) {
-            $Tag = (& git -C (Join-Path $Libraries $Library) describe --exact-match --tags)
-            if ($Tag -ne $ExpectedTags[$Library]) {
-              throw "$Library is at '$Tag' instead of $($ExpectedTags[$Library])"
-            }
-          }
+          bash ./scripts/verify-release-pins.sh "$Libraries"
 
       - name: Install Arduino libraries from Git Bash with a drive path
         shell: bash
