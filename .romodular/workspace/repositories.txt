@@ -1,6 +1,5 @@
 # directory|origin
 RoModular|https://github.com/ChecheRomo96/RoModular.git
-RoModularAgents|https://github.com/ChecheRomo96/RoModularAgents.git
 RoModularBuild|https://github.com/ChecheRomo96/RoModularBuild.git
 CPSTL|https://github.com/ChecheRomo96/CPSTL.git
 Foundation|https://github.com/ChecheRomo96/Foundation.git

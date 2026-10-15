@@ -8,7 +8,7 @@
  * retained only as legacy references.
  *
  * The portal uses the Foundation-family Doxygen light/dark theme, search and
- * navigation behavior. CPSTL, RoModularBuild and RoModularAgents retain their
+ * navigation behavior. CPSTL and RoModularBuild retain their
  * purpose-specific documentation workflows rather than being forced into an
  * API reference.
  *
@@ -18,7 +18,7 @@
  * - @ref RoModular_Ecosystem_Architecture shows the dependency boundaries.
  * - @ref RoModular_Repositories links every repository and its own documentation.
  * - @ref RoModular_Governance_Status defines current maturity and next steps.
- * - @ref RoModular_Governance_AIAgents explains the shared AI-agent contract.
+ * - @ref RoModular_Governance_AIAgents explains how AI coding agents are instructed.
  *
  * @section RoModularMainPrinciple One Portal, Independent Repositories
  *
