@@ -49,6 +49,5 @@
  * - DspCore contains signal processing but no MIDI or music-theory concepts.
  * - MIDILAR owns MIDI and higher-level real-time music-system behavior.
  * - RoModularBuild may provide build mechanics but never project policy.
- *   runtime dependency.
  * - RoModular documents every layer but is not a build or runtime dependency.
  */
