@@ -12,23 +12,20 @@ else
     DEFAULT_WORKSPACE_ROOT="$ROMODULAR_PARENT/RoModularWorkspace"
 fi
 DEFAULT_MANIFEST="$ROMODULAR_ROOT/.romodular/workspace/repositories.txt"
-AGENT_REPOSITORY_NAME=RoModularAgents
 
 WORKSPACE_ROOT=${ROMODULAR_WORKSPACE_ROOT:-$DEFAULT_WORKSPACE_ROOT}
 MANIFEST=$DEFAULT_MANIFEST
-FORCE_CONFIG=0
 DRY_RUN=0
 
 usage() {
     printf '%s\n' \
-        "Usage: $0 [--root <path>] [--manifest <path>] [--force-config] [--dry-run]" \
+        "Usage: $0 [--root <path>] [--manifest <path>] [--dry-run]" \
         "" \
-        "Clone the RoModular repositories and configure a shared AI workspace." \
+        "Clone the RoModular repositories into a shared workspace." \
         "" \
         "Options:" \
         "  --root <path>      Workspace root. Defaults to a RoModularWorkspace sibling." \
         "  --manifest <path>  Alternate directory|origin repository manifest." \
-        "  --force-config     Replace existing workspace agent adapters." \
         "  --dry-run          Print planned actions without changing the filesystem." \
         "  -h, --help         Show this help text."
 }
@@ -53,10 +50,6 @@ while [ "$#" -gt 0 ]; do
             [ "$#" -ge 2 ] || fail "--manifest requires a path"
             MANIFEST=$2
             shift 2
-            ;;
-        --force-config)
-            FORCE_CONFIG=1
-            shift
             ;;
         --dry-run)
             DRY_RUN=1
@@ -150,121 +143,6 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
         fi
     fi
 done < "$MANIFEST"
-
-AGENT_REPOSITORY_ROOT="$WORKSPACE_ROOT/$AGENT_REPOSITORY_NAME"
-WORKSPACE_AGENTS_TEMPLATE="$AGENT_REPOSITORY_ROOT/workspace/AGENTS.md"
-WORKSPACE_CLAUDE_TEMPLATE="$AGENT_REPOSITORY_ROOT/workspace/CLAUDE.md"
-WORKSPACE_SKILLS_ROOT="$AGENT_REPOSITORY_ROOT/skills"
-
-AGENT_SOURCES_AVAILABLE=1
-if [ ! -f "$WORKSPACE_AGENTS_TEMPLATE" ] || \
-   [ ! -f "$WORKSPACE_CLAUDE_TEMPLATE" ] || \
-   [ ! -d "$WORKSPACE_SKILLS_ROOT" ]; then
-    if [ "$DRY_RUN" -eq 1 ] && [ ! -e "$AGENT_REPOSITORY_ROOT" ]; then
-        AGENT_SOURCES_AVAILABLE=0
-    else
-        fail "canonical workspace templates or skills not found under $AGENT_REPOSITORY_ROOT"
-    fi
-fi
-
-install_workspace_file() {
-    SOURCE_FILE=$1
-    DESTINATION_FILE=$2
-    DISPLAY_NAME=$3
-
-    if [ -e "$DESTINATION_FILE" ] && [ ! -f "$DESTINATION_FILE" ]; then
-        printf 'error: %s exists but is not a regular file\n' "$DESTINATION_FILE" >&2
-        FAILED=1
-    elif [ -f "$DESTINATION_FILE" ] && cmp -s "$SOURCE_FILE" "$DESTINATION_FILE"; then
-        printf 'configured: %s is current\n' "$DISPLAY_NAME"
-    elif [ -e "$DESTINATION_FILE" ] && [ "$FORCE_CONFIG" -ne 1 ]; then
-        printf 'error: %s already exists and differs from the template\n' \
-            "$DESTINATION_FILE" >&2
-        printf '       rerun with --force-config to replace it\n' >&2
-        FAILED=1
-    elif [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] install %s\n' "$DISPLAY_NAME"
-    else
-        mkdir -p "$(dirname -- "$DESTINATION_FILE")"
-        cp "$SOURCE_FILE" "$DESTINATION_FILE"
-        printf 'configured: %s\n' "$DESTINATION_FILE"
-    fi
-}
-
-install_workspace_directory() {
-    SOURCE_DIRECTORY=$1
-    DESTINATION_DIRECTORY=$2
-    DISPLAY_NAME=$3
-
-    if [ -e "$DESTINATION_DIRECTORY" ] && [ ! -d "$DESTINATION_DIRECTORY" ]; then
-        printf 'error: %s exists but is not a directory\n' \
-            "$DESTINATION_DIRECTORY" >&2
-        FAILED=1
-    elif [ -d "$DESTINATION_DIRECTORY" ] && \
-         diff -qr "$SOURCE_DIRECTORY" "$DESTINATION_DIRECTORY" >/dev/null 2>&1; then
-        printf 'configured: %s is current\n' "$DISPLAY_NAME"
-    elif [ -e "$DESTINATION_DIRECTORY" ] && [ "$FORCE_CONFIG" -ne 1 ]; then
-        printf 'error: %s already exists and differs from the canonical skill\n' \
-            "$DESTINATION_DIRECTORY" >&2
-        printf '       rerun with --force-config to replace it\n' >&2
-        FAILED=1
-    elif [ "$DRY_RUN" -eq 1 ]; then
-        printf '[dry-run] install %s\n' "$DISPLAY_NAME"
-    else
-        case "$DESTINATION_DIRECTORY" in
-            "$WORKSPACE_ROOT/.codex/skills/"*|"$WORKSPACE_ROOT/.claude/skills/"*) ;;
-            *) fail "refusing unexpected skill destination: $DESTINATION_DIRECTORY" ;;
-        esac
-        rm -rf -- "$DESTINATION_DIRECTORY"
-        mkdir -p "$(dirname -- "$DESTINATION_DIRECTORY")"
-        cp -R "$SOURCE_DIRECTORY" "$DESTINATION_DIRECTORY"
-        printf 'configured: %s\n' "$DESTINATION_DIRECTORY"
-    fi
-}
-
-if [ "$AGENT_SOURCES_AVAILABLE" -eq 1 ]; then
-    install_workspace_file \
-        "$WORKSPACE_AGENTS_TEMPLATE" \
-        "$WORKSPACE_ROOT/AGENTS.md" \
-        "workspace AGENTS.md"
-    install_workspace_file \
-        "$WORKSPACE_CLAUDE_TEMPLATE" \
-        "$WORKSPACE_ROOT/.claude/CLAUDE.md" \
-        "workspace .claude/CLAUDE.md"
-
-    for SOURCE_SKILL in "$WORKSPACE_SKILLS_ROOT"/*; do
-        [ -d "$SOURCE_SKILL" ] || continue
-        SKILL_NAME=$(basename -- "$SOURCE_SKILL")
-        install_workspace_directory \
-            "$SOURCE_SKILL" \
-            "$WORKSPACE_ROOT/.codex/skills/$SKILL_NAME" \
-            "Codex skill $SKILL_NAME"
-        install_workspace_directory \
-            "$SOURCE_SKILL" \
-            "$WORKSPACE_ROOT/.claude/skills/$SKILL_NAME" \
-            "Claude skill $SKILL_NAME"
-    done
-else
-    printf '[dry-run] install workspace AGENTS.md from the planned RoModularAgents checkout\n'
-    printf '[dry-run] install workspace .claude/CLAUDE.md from the planned RoModularAgents checkout\n'
-    printf '[dry-run] install canonical skills into .codex/skills and .claude/skills\n'
-fi
-
-if command -v codex >/dev/null 2>&1; then
-    CODEX_VERSION=$(codex --version 2>/dev/null || true)
-    printf 'Codex available: %s\n' "${CODEX_VERSION:-version unavailable}"
-    printf "  launch: codex -C '%s'\n" "$WORKSPACE_ROOT"
-else
-    printf 'Codex not found; workspace files were configured without installing it.\n'
-fi
-
-if command -v claude >/dev/null 2>&1; then
-    CLAUDE_VERSION=$(claude --version 2>/dev/null || true)
-    printf 'Claude Code available: %s\n' "${CLAUDE_VERSION:-version unavailable}"
-    printf "  launch: cd '%s' && claude\n" "$WORKSPACE_ROOT"
-else
-    printf 'Claude Code not found; workspace files were configured without installing it.\n'
-fi
 
 if [ "$FAILED" -ne 0 ]; then
     fail "workspace setup completed with errors"

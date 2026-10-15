@@ -22,12 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Checkout canonical agent guidance
-        uses: actions/checkout@v5
-        with:
-          repository: ChecheRomo96/RoModularAgents
-          path: .ci-workspace/RoModularAgents
-
       - name: Validate shell syntax
         shell: bash
         run: |
@@ -43,14 +37,14 @@ jobs:
         run: |
           ./scripts/bootstrap-workspace.sh \
             --root "$GITHUB_WORKSPACE/.ci-workspace" \
-            --manifest "$GITHUB_WORKSPACE/.github/testdata/agent-workspace.txt"
+            --manifest "$GITHUB_WORKSPACE/.github/testdata/bootstrap-workspace.txt"
 
       - name: Verify idempotent configuration
         shell: bash
         run: |
           ./scripts/bootstrap-workspace.sh \
             --root "$GITHUB_WORKSPACE/.ci-workspace" \
-            --manifest "$GITHUB_WORKSPACE/.github/testdata/agent-workspace.txt"
+            --manifest "$GITHUB_WORKSPACE/.github/testdata/bootstrap-workspace.txt"
 
       - name: Install Arduino libraries twice
         shell: bash
@@ -74,12 +68,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Checkout canonical agent guidance
-        uses: actions/checkout@v5
-        with:
-          repository: ChecheRomo96/RoModularAgents
-          path: .ci-workspace/RoModularAgents
-
       - name: Test read-only workspace CLI
         shell: pwsh
         run: ./tests/test-romodular-cli.ps1
@@ -89,14 +77,14 @@ jobs:
         run: |
           ./scripts/bootstrap-workspace.ps1 `
             -Root (Join-Path $env:GITHUB_WORKSPACE ".ci-workspace") `
-            -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/agent-workspace.txt")
+            -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/bootstrap-workspace.txt")
 
       - name: Verify idempotent configuration
         shell: pwsh
         run: |
           ./scripts/bootstrap-workspace.ps1 `
             -Root (Join-Path $env:GITHUB_WORKSPACE ".ci-workspace") `
-            -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/agent-workspace.txt")
+            -Manifest (Join-Path $env:GITHUB_WORKSPACE ".github/testdata/bootstrap-workspace.txt")
 
       - name: Install Arduino libraries twice
         shell: pwsh

@@ -10,7 +10,6 @@
  *   edge [color="#52677f", fontname="Helvetica", fontsize=10];
  *
  *   portal [label="RoModular\necosystem documentation", fillcolor="#dce9ff"];
- *   agents [label="RoModularAgents\nagent contracts and skills", fillcolor="#e8e0ff"];
  *   build [label="RoModularBuild\nbuild and CI infrastructure"];
  *   cpstl [label="CPSTL\nportable standard vocabulary"];
  *   foundation [label="Foundation\nportable C++ base library"];
@@ -18,7 +17,6 @@
  *   dsp [label="DspCore\nsignal-processing library"];
  *   midilar [label="MIDILAR\nMIDI and music systems", style="rounded,dashed,filled", fillcolor="#f5f5f5"];
  *
- *   portal -> agents [style=dotted, label="documents"];
  *   portal -> build [style=dotted, label="documents"];
  *   portal -> foundation [style=dotted, label="documents"];
  *   portal -> cpstl [style=dotted, label="documents"];
@@ -30,13 +28,6 @@
  *   build -> cpstl [label="pinned build contract"];
  *   build -> mcc [label="pinned build contract"];
  *   build -> dsp [label="pinned build contract"];
- *   agents -> portal [style=dotted, label="guides"];
- *   agents -> build [style=dotted, label="guides"];
- *   agents -> foundation [style=dotted, label="guides"];
- *   agents -> cpstl [style=dotted, label="guides"];
- *   agents -> mcc [style=dotted, label="guides"];
- *   agents -> dsp [style=dotted, label="guides"];
- *   agents -> midilar [style=dotted, label="guides"];
  *   cpstl -> foundation [label="public C++ dependency"];
  *   foundation -> mcc [label="public C++ dependency"];
  *   foundation -> dsp [label="public C++ dependency"];
@@ -58,7 +49,5 @@
  * - DspCore contains signal processing but no MIDI or music-theory concepts.
  * - MIDILAR owns MIDI and higher-level real-time music-system behavior.
  * - RoModularBuild may provide build mechanics but never project policy.
- * - RoModularAgents provides engineering guidance but is not a build or
- *   runtime dependency.
  * - RoModular documents every layer but is not a build or runtime dependency.
  */

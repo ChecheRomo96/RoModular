@@ -23,7 +23,6 @@
  * | Repository | Status | Next ecosystem milestone |
  * | ---------- | ------ | ------------------------ |
  * | RoModular | Active | Publish and maintain the ecosystem portal |
- * | RoModularAgents | Active | Maintain the canonical guidance installed by the workspace bootstrap validated on macOS and Windows |
  * | RoModularBuild | Active | Stabilize the shared profiles already consumed by Foundation and MCC |
  * | CPSTL | Stable | Released 1.1.5; preserve portable C++11 and embedded validation |
  * | Foundation | Stable | Released 2.0.5 on CPSTL 1.1.5 |
