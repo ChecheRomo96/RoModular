@@ -6,9 +6,9 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Portable signal processing without MIDI or music-theory concepts |
- * | Current release | [`v0.1.2`](https://github.com/ChecheRomo96/DspCore/releases/tag/v0.1.2) |
+ * | Current release | [`v0.1.3`](https://github.com/ChecheRomo96/DspCore/releases/tag/v0.1.3) |
  * | Source | [ChecheRomo96/DspCore](https://github.com/ChecheRomo96/DspCore) |
- * | Runtime dependencies | Foundation `2.0.7` or a newer 2.x release |
+ * | Runtime dependencies | Foundation `2.0.8` or a newer 2.x release |
  * | Public CMake target | `DspCore::DspCore` |
  *
  * DspCore owns signal-processing concepts separately from MIDI and music theory.

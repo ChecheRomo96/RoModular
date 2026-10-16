@@ -1,7 +1,7 @@
 # Arduino library|immutable Git tag
 # Default installer input.  Keep entries in dependency order.
-CPSTL|v1.1.11
-Foundation|v2.0.7
-DspCore|v0.1.2
-MCC|v0.6.1
-MIDILAR|v0.3.2
+CPSTL|v1.1.12
+Foundation|v2.0.8
+DspCore|v0.1.3
+MCC|v0.6.2
+MIDILAR|v0.3.3
