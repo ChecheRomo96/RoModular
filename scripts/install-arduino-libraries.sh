@@ -58,7 +58,7 @@ update_clone() {
         printf '[dry-run] update %s to %s\n' "$LIBRARY" "$REF"
         return 0
     fi
-    if ! git -C "$LIBRARY_PATH" fetch --quiet --tags origin; then
+    if ! git -c pack.writeReverseIndex=false -C "$LIBRARY_PATH" fetch --quiet --tags origin; then
         printf 'error: fetch failed for %s\n' "$LIBRARY" >&2
         FAILED=1
         return 0
@@ -173,7 +173,8 @@ for LIBRARY in $LIBRARIES; do
     fi
 
     printf 'cloning: %s (%s)\n' "$LIBRARY" "$REF"
-    if ! git clone --branch "$REF" "$ORIGIN" "$LIBRARY_PATH"; then
+    # Optional reverse indexes can fail to rename in synchronized folders.
+    if ! git -c pack.writeReverseIndex=false clone --branch "$REF" "$ORIGIN" "$LIBRARY_PATH"; then
         printf 'error: clone failed for %s\n' "$LIBRARY" >&2
         FAILED=1
     fi
