@@ -3,8 +3,9 @@
 Clones the RoModular repositories into a shared workspace.
 
 .DESCRIPTION
-Existing Git worktrees are verified and left unchanged. Missing repositories
-are cloned recursively.
+Existing Git worktrees are verified. Clean CPSTL main checkouts are
+fast-forwarded; other existing repositories are left unchanged. Missing
+repositories are cloned recursively.
 
 .PARAMETER Root
 Workspace root. Defaults to a RoModularWorkspace directory beside the
@@ -138,6 +139,26 @@ foreach ($Line in Get-Content -LiteralPath $Manifest) {
             continue
         }
 
+        if ($RepositoryName -eq "CPSTL") {
+            $Status = & git -C $RepositoryPath status --porcelain
+            if ($LASTEXITCODE -ne 0) { throw "Cannot inspect CPSTL status" }
+            $Branch = & git -C $RepositoryPath symbolic-ref --quiet --short HEAD
+            if ($LASTEXITCODE -ne 0 -or $Branch -ne "main" -or $Status) {
+                throw "CPSTL must be clean and on main to update; preserve local work before retrying"
+            }
+            if ($DryRun) {
+                Write-Host "[dry-run] fetch CPSTL main and fast-forward to origin/main"
+                continue
+            }
+            & git -C $RepositoryPath fetch origin "+refs/heads/main:refs/remotes/origin/main"
+            if ($LASTEXITCODE -ne 0) { throw "Fetch failed for CPSTL" }
+            & git -C $RepositoryPath merge-base --is-ancestor HEAD origin/main
+            if ($LASTEXITCODE -ne 0) { throw "CPSTL has local commits; cannot update to origin/main" }
+            & git -C $RepositoryPath merge --ff-only origin/main
+            if ($LASTEXITCODE -ne 0) { throw "Fast-forward failed for CPSTL" }
+            Write-Host "updated: CPSTL (origin/main)"
+            continue
+        }
         Write-Host "present: $RepositoryName (left unchanged)"
         continue
     }
@@ -147,7 +168,9 @@ foreach ($Line in Get-Content -LiteralPath $Manifest) {
     }
     else {
         Write-Host "cloning: $RepositoryName"
-        & git clone --recurse-submodules $RepositoryOrigin $RepositoryPath
+        $CloneOptions = @("--recurse-submodules")
+        if ($RepositoryName -eq "CPSTL") { $CloneOptions += @("--branch", "main") }
+        & git clone @CloneOptions $RepositoryOrigin $RepositoryPath
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Clone failed for $RepositoryName" -ErrorAction Continue
             $Failed = $true
@@ -159,4 +182,4 @@ if ($Failed) {
     throw "Workspace setup completed with errors"
 }
 
-Write-Host "Workspace setup complete. Existing repositories were not updated."
+Write-Host "Workspace setup complete. CPSTL tracks origin/main; other existing repositories were not updated."
