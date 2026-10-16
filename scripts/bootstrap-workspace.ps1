@@ -150,7 +150,7 @@ foreach ($Line in Get-Content -LiteralPath $Manifest) {
                 Write-Host "[dry-run] fetch CPSTL main and fast-forward to origin/main"
                 continue
             }
-            & git -C $RepositoryPath fetch origin "+refs/heads/main:refs/remotes/origin/main"
+            & git -c pack.writeReverseIndex=false -C $RepositoryPath fetch origin "+refs/heads/main:refs/remotes/origin/main"
             if ($LASTEXITCODE -ne 0) { throw "Fetch failed for CPSTL" }
             & git -C $RepositoryPath merge-base --is-ancestor HEAD origin/main
             if ($LASTEXITCODE -ne 0) { throw "CPSTL has local commits; cannot update to origin/main" }
@@ -170,7 +170,9 @@ foreach ($Line in Get-Content -LiteralPath $Manifest) {
         Write-Host "cloning: $RepositoryName"
         $CloneOptions = @("--recurse-submodules")
         if ($RepositoryName -eq "CPSTL") { $CloneOptions += @("--branch", "main") }
-        & git clone @CloneOptions $RepositoryOrigin $RepositoryPath
+        # Reverse indexes are optional; avoid .rev rename failures in synced folders.
+        # Command-scoped configuration also reaches recursive submodule clones.
+        & git -c pack.writeReverseIndex=false clone @CloneOptions $RepositoryOrigin $RepositoryPath
         if ($LASTEXITCODE -ne 0) {
             Write-Error "Clone failed for $RepositoryName" -ErrorAction Continue
             $Failed = $true
