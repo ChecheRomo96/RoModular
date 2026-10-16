@@ -137,7 +137,7 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
                 printf '[dry-run] fetch CPSTL main and fast-forward to origin/main\n'
                 continue
             fi
-            git -C "$REPOSITORY_PATH" fetch origin '+refs/heads/main:refs/remotes/origin/main' || fail "fetch failed for CPSTL"
+            git -c pack.writeReverseIndex=false -C "$REPOSITORY_PATH" fetch origin '+refs/heads/main:refs/remotes/origin/main' || fail "fetch failed for CPSTL"
             git -C "$REPOSITORY_PATH" merge-base --is-ancestor HEAD origin/main || fail "CPSTL has local commits; cannot update to origin/main"
             git -C "$REPOSITORY_PATH" merge --ff-only origin/main || fail "fast-forward failed for CPSTL"
             printf 'updated: CPSTL (origin/main)\n'
@@ -155,7 +155,9 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
         if [ "$REPOSITORY_NAME" = CPSTL ]; then
             set -- "$@" --branch main
         fi
-        if ! git clone "$@" "$REPOSITORY_ORIGIN" "$REPOSITORY_PATH"; then
+        # Optional .rev indexes can fail to rename in synced folders. Keep this
+        # setting command-scoped, including recursive submodule clones.
+        if ! git -c pack.writeReverseIndex=false clone "$@" "$REPOSITORY_ORIGIN" "$REPOSITORY_PATH"; then
             printf 'error: clone failed for %s\n' "$REPOSITORY_NAME" >&2
             FAILED=1
         fi

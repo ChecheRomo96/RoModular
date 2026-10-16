@@ -51,3 +51,4 @@ foreach ($Mode in @("powershell", "shell")) {
     Bootstrap -ExpectFailure
 }
 Write-Host "CPSTL bootstrap regression checks passed for PowerShell and shell. Fixtures: $Fixture"
+$global:LASTEXITCODE = 0
