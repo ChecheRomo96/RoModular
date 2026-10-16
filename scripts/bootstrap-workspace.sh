@@ -129,6 +129,20 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
             continue
         fi
 
+        if [ "$REPOSITORY_NAME" = CPSTL ]; then
+            STATUS=$(git -C "$REPOSITORY_PATH" status --porcelain) || fail "cannot inspect CPSTL status"
+            BRANCH=$(git -C "$REPOSITORY_PATH" symbolic-ref --quiet --short HEAD || true)
+            [ -z "$STATUS" ] && [ "$BRANCH" = main ] || fail "CPSTL must be clean and on main to update; preserve local work before retrying"
+            if [ "$DRY_RUN" -eq 1 ]; then
+                printf '[dry-run] fetch CPSTL main and fast-forward to origin/main\n'
+                continue
+            fi
+            git -C "$REPOSITORY_PATH" fetch origin '+refs/heads/main:refs/remotes/origin/main' || fail "fetch failed for CPSTL"
+            git -C "$REPOSITORY_PATH" merge-base --is-ancestor HEAD origin/main || fail "CPSTL has local commits; cannot update to origin/main"
+            git -C "$REPOSITORY_PATH" merge --ff-only origin/main || fail "fast-forward failed for CPSTL"
+            printf 'updated: CPSTL (origin/main)\n'
+            continue
+        fi
         printf 'present: %s (left unchanged)\n' "$REPOSITORY_NAME"
         continue
     fi
@@ -137,7 +151,11 @@ while IFS='|' read -r REPOSITORY_NAME REPOSITORY_ORIGIN || [ -n "$REPOSITORY_NAM
         printf '[dry-run] clone %s into %s\n' "$REPOSITORY_ORIGIN" "$REPOSITORY_PATH"
     else
         printf 'cloning: %s\n' "$REPOSITORY_NAME"
-        if ! git clone --recurse-submodules "$REPOSITORY_ORIGIN" "$REPOSITORY_PATH"; then
+        set -- --recurse-submodules
+        if [ "$REPOSITORY_NAME" = CPSTL ]; then
+            set -- "$@" --branch main
+        fi
+        if ! git clone "$@" "$REPOSITORY_ORIGIN" "$REPOSITORY_PATH"; then
             printf 'error: clone failed for %s\n' "$REPOSITORY_NAME" >&2
             FAILED=1
         fi
@@ -148,4 +166,4 @@ if [ "$FAILED" -ne 0 ]; then
     fail "workspace setup completed with errors"
 fi
 
-printf 'Workspace setup complete. Existing repositories were not updated.\n'
+printf 'Workspace setup complete. CPSTL tracks origin/main; other existing repositories were not updated.\n'

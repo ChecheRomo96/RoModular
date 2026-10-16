@@ -90,15 +90,16 @@
  * 2. Verify the `origin` URL when the directory already contains a Git
  *    worktree. The equivalent HTTPS forms with or without a trailing `.git`
  *    suffix are accepted.
- * 3. Leave every existing repository, branch, worktree, submodule, and
+ * 3. Fetch and fast-forward clean CPSTL checkouts on `main` to `origin/main`.
+ *    Refuse dirty, detached, other-branch, or locally ahead CPSTL checkouts.
+ *    Leave other existing repositories, branches, worktrees, submodules, and
  *    uncommitted change untouched.
  * 4. Refuse a directory that is not a Git worktree or has an unexpected
  *    `origin`.
  *
- * The bootstrap never runs `pull`, `checkout`, `reset`, `clean`, merge, or
- * rebase. It is therefore safe to preview against an active development
- * workspace. A repository that requires synchronization remains an explicit
- * maintenance decision.
+ * CPSTL updates use fetch and a fast-forward-only merge; local work is never
+ * overwritten. Other repositories require explicit synchronization. Use
+ * `--dry-run` or `-DryRun` to preview without fetching or changing files.
  *
  * The bootstrap configures no AI agent or editor. Each repository carries its
  * own `AGENTS.md`; see @ref RoModular_Governance_AIAgents.

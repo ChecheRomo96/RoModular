@@ -72,6 +72,10 @@ jobs:
         shell: pwsh
         run: ./tests/test-romodular-cli.ps1
 
+      - name: Test CPSTL bootstrap updates and local-work protection
+        shell: pwsh
+        run: ./tests/test-bootstrap-cpstl.ps1
+
       - name: Configure test workspace
         shell: pwsh
         run: |
