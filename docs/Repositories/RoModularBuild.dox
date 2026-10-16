@@ -6,14 +6,15 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Project-independent CMake, toolchain, workflow, and CI mechanics |
- * | Current validated release | `v0.4.0` |
- * | Status | Active; validated by Foundation and MCC |
+ * | Current validated release | `v0.6.2` |
+ * | Status | Active; shared embedded support validated by CPSTL |
  * | Source | [ChecheRomo96/RoModularBuild](https://github.com/ChecheRomo96/RoModularBuild) |
- * | Documentation | [Documentation directory](https://github.com/ChecheRomo96/RoModularBuild/tree/v0.4.0/docs) |
- * | Consumers | Foundation and MCC |
+ * | Documentation | [Documentation directory](https://github.com/ChecheRomo96/RoModularBuild/tree/v0.6.2/docs) |
+ * | Consumers | CPSTL, Foundation, DspCore, MCC and MIDILAR |
  *
  * RoModularBuild defines reusable compiler, architecture, ABI, preset-base,
  * lifecycle, and cross-platform CI behavior. Consumers pin an exact tag or
- * commit. Public preset names, feature options, examples, packages, firmware,
- * artifacts, hardware evidence, and release policy stay in each consumer.
+ * commit. Public preset names, feature options, application firmware, package policy,
+ * hardware evidence and release policy stay in each consumer. Reusable startup,
+ * linker/runtime support, artifact conversion and programmer transports are shared.
  */

@@ -6,14 +6,15 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | General-purpose types, containers, math, time, callbacks, scheduling, and utilities |
- * | Current release | [`v1.4.0`](https://github.com/ChecheRomo96/Foundation/releases/tag/v1.4.0) |
- * | Status | Stable 1.x foundation layer |
+ * | Current release | [`v2.0.7`](https://github.com/ChecheRomo96/Foundation/releases/tag/v2.0.7) |
+ * | Status | Stable 2.x foundation layer |
  * | Source | [ChecheRomo96/Foundation](https://github.com/ChecheRomo96/Foundation) |
  * | Documentation | [Foundation on GitHub Pages](https://checheromo96.github.io/Foundation/) |
- * | Build infrastructure | RoModularBuild `v0.4.0` |
+ * | Build infrastructure | RoModularBuild `v0.6.2` |
+ * | Runtime dependency | CPSTL `1.1.11` or a compatible newer 1.x release |
  * | Public CMake target | `Foundation::Foundation` |
  *
- * Foundation is the lowest runtime layer currently shared by RoModular
+ * Foundation supplies general-purpose facilities above CPSTL to RoModular
  * libraries. It targets desktop and embedded systems without depending on any
  * music-domain repository. Its own documentation is authoritative for API,
  * platform support, packages, examples, testing, and known limitations.
