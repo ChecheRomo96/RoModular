@@ -26,13 +26,16 @@ try {
     }
 
     Set-Content -LiteralPath (Join-Path $testRoot "Foundation/untracked.txt") -Value "dirty"
+    & git -C (Join-Path $testRoot 'MCC') remote remove origin
+    & git -C (Join-Path $testRoot 'MCC') checkout --detach -q
     Remove-Item -LiteralPath (Join-Path $testRoot "MIDILAR") -Recurse -Force
 
     $doctor = (& $cli doctor -Root $testRoot | Out-String)
     $status = (& $cli status -Root $testRoot | Out-String)
     if ($doctor -notmatch [regex]::Escape("workspace marker: absent (manifest layout accepted)")) { throw "doctor did not report the fixture layout" }
     if ($status -notmatch "Foundation: .*dirty=1 .*origin=ok .*upstream=none") { throw "status did not report the dirty repository" }
-    if ($status -notmatch "(?m)^MIDILAR: missing$") { throw "status did not report the missing repository" }
+    if ($status -notmatch "(?m)^MIDILAR: missing\r?$") { throw "status did not report the missing repository" }
+    if ($status -notmatch "MCC: ref=detached .*origin=mismatch upstream=none") { throw "status did not handle missing Git metadata" }
 
     $before = (& git -C (Join-Path $testRoot "RoModular") rev-parse HEAD).Trim()
     $beforeBranch = (& git -C (Join-Path $testRoot "RoModular") branch --show-current).Trim()
