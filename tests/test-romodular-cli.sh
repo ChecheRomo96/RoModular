@@ -23,6 +23,8 @@ while IFS='|' read -r name origin || [ -n "$name" ]; do
 done < "$MANIFEST"
 
 printf 'dirty\n' > "$TEST_ROOT/Foundation/untracked.txt"
+git -C "$TEST_ROOT/MCC" remote remove origin
+git -C "$TEST_ROOT/MCC" checkout --detach -q
 rm -rf "$TEST_ROOT/MIDILAR"
 
 doctor_output=$($CLI doctor --root "$TEST_ROOT")
@@ -30,6 +32,7 @@ status_output=$($CLI status --root "$TEST_ROOT")
 printf '%s\n' "$doctor_output" | grep -F "workspace marker: absent (manifest layout accepted)" >/dev/null
 printf '%s\n' "$status_output" | grep -E '^Foundation: .*dirty=1 .*origin=ok .*upstream=none' >/dev/null
 printf '%s\n' "$status_output" | grep -Fx 'MIDILAR: missing' >/dev/null
+printf '%s\n' "$status_output" | grep -E '^MCC: ref=detached .*origin=mismatch upstream=none' >/dev/null
 
 before=$(git -C "$TEST_ROOT/RoModular" rev-parse HEAD)
 before_branch=$(git -C "$TEST_ROOT/RoModular" branch --show-current)

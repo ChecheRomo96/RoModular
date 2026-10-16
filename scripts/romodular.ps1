@@ -31,14 +31,15 @@ function Show-Status {
         $path = Join-Path $workspaceRoot $name
         & git -C $path rev-parse --is-inside-work-tree *> $null
         if ($LASTEXITCODE -ne 0) { Write-Output "$name`: missing"; continue }
-        $actualOrigin = (& git -C $path remote get-url origin 2>$null).Trim()
+        # Git can emit no stdout; interpolation guarantees an empty string.
+        $actualOrigin = "$(& git -C $path remote get-url origin 2>$null)".Trim()
         $originStatus = if ($actualOrigin -and (Normalize-Origin $actualOrigin) -eq (Normalize-Origin $repository.Origin)) { "ok" } else { "mismatch" }
-        $branch = (& git -C $path branch --show-current).Trim(); if (-not $branch) { $branch = "detached" }
+        $branch = "$(& git -C $path branch --show-current)".Trim(); if (-not $branch) { $branch = "detached" }
         $shortSha = (& git -C $path rev-parse --short HEAD).Trim()
         $dirty = @(& git -C $path status --porcelain).Count
-        $upstream = (& git -C $path rev-parse --abbrev-ref '@{upstream}' 2>$null).Trim()
+        $upstream = "$(& git -C $path rev-parse --abbrev-ref '@{upstream}' 2>$null)".Trim()
         if (-not $upstream) { $upstream = "none" }
-        $drift = (& git -C $path rev-list --left-right --count '@{upstream}...HEAD' 2>$null).Trim()
+        $drift = "$(& git -C $path rev-list --left-right --count '@{upstream}...HEAD' 2>$null)".Trim()
         if ($drift -match '^([0-9]+)\s+([0-9]+)$') { $drift = "behind=$($Matches[1]) ahead=$($Matches[2]) (cached)" } else { $drift = "behind/ahead=unknown (cached)" }
         Write-Output "$name`: ref=$branch sha=$shortSha dirty=$dirty origin=$originStatus upstream=$upstream $drift"
     }
