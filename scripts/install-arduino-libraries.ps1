@@ -91,7 +91,7 @@ function Update-Clone {
         Write-Host "[dry-run] update $Library to $Reference"
         return "updated"
     }
-    & git -C $LibraryPath fetch --quiet --tags origin | Out-Null
+    & git -c pack.writeReverseIndex=false -C $LibraryPath fetch --quiet --tags origin | Out-Null
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Fetch failed for $Library" -ErrorAction Continue
         return "failed"
@@ -211,7 +211,8 @@ foreach ($Library in $Libraries) {
     }
 
     Write-Host "cloning: $Library$ReferenceNote"
-    & git clone --branch $Reference $Origin $LibraryPath
+    # Optional reverse indexes can fail to rename in synchronized folders.
+    & git -c pack.writeReverseIndex=false clone --branch $Reference $Origin $LibraryPath
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Clone failed for $Library" -ErrorAction Continue
         $Failed = $true
