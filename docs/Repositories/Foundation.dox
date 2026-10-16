@@ -6,12 +6,12 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | General-purpose types, containers, math, time, callbacks, scheduling, and utilities |
- * | Current release | [`v2.0.7`](https://github.com/ChecheRomo96/Foundation/releases/tag/v2.0.7) |
+ * | Current release | [`v2.0.8`](https://github.com/ChecheRomo96/Foundation/releases/tag/v2.0.8) |
  * | Status | Stable 2.x foundation layer |
  * | Source | [ChecheRomo96/Foundation](https://github.com/ChecheRomo96/Foundation) |
  * | Documentation | [Foundation on GitHub Pages](https://checheromo96.github.io/Foundation/) |
  * | Build infrastructure | RoModularBuild `v0.6.2` |
- * | Runtime dependency | CPSTL `1.1.11` or a compatible newer 1.x release |
+ * | Runtime dependency | CPSTL `1.1.12` or a compatible newer 1.x release |
  * | Public CMake target | `Foundation::Foundation` |
  *
  * Foundation supplies general-purpose facilities above CPSTL to RoModular
