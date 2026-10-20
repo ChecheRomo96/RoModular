@@ -63,6 +63,8 @@ GENERATE_LATEX         = NO
 
 HAVE_DOT               = YES
 DOT_NUM_THREADS        = 0
+UML_LOOK               = YES
+DOT_UML_DETAILS        = YES
 DOT_IMAGE_FORMAT       = svg
 INTERACTIVE_SVG        = YES
 DOT_GRAPH_MAX_NODES    = 100
