@@ -25,9 +25,9 @@
  * | RoModular | Active | Publish and maintain the ecosystem portal |
  * | RoModularBuild | Active | Stabilize the shared profiles already consumed by Foundation and MCC |
  * | CPSTL | Stable | Released 1.1.12; preserve portable C++11 and embedded validation |
- * | Foundation | Stable | Released 2.0.8 on CPSTL 1.1.12 |
- * | DspCore | Active | Released 0.1.3 on Foundation 2.0.8; continue the signal-processing plan |
- * | MusicCompositionCore | Stable | Released 0.6.2 on Foundation 2.0.8 |
+ * | Foundation | Stable | Tagged 2.0.10 on CPSTL 1.1.12 |
+ * | DspCore | Active | Released 0.1.3; now requires Foundation 2.0.10; continue the signal-processing plan |
+ * | MusicCompositionCore | Stable | Released 0.6.2; now requires Foundation 2.0.10 |
  * | MIDILAR | Stable | Released 0.3.3 with calibrated MIDI clock support |
  * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |
  *
