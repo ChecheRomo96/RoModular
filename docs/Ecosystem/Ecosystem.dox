@@ -24,5 +24,7 @@
  *
  * It does not own library APIs, compiler flags, target support claims, package
  * contents, or release evidence. Those facts remain in the affected project.
+ * See @ref RoModular_Ecosystem_DevelopmentFlow "Workspace, repository and delivery map"
+ * for the route from a local change to a consumer installation.
  */
 
