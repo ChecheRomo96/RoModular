@@ -1,0 +1,166 @@
+/**
+ * @defgroup RoModular_Ecosystem_DevelopmentFlow Workspace, repository and delivery map
+ * @ingroup RoModular_Ecosystem
+ * @brief A physical map of the workspace first; build and release flow second.
+ *
+ * This is the page to use when the question is "where am I?" rather than
+ * "which command do I run?". It starts with the repositories on disk, then
+ * shows what is inside a library repository, its C++ dependencies, and finally
+ * the route taken by a change.
+ *
+ * @section RoModularWorkspaceLayout The workspace is a set of sibling repositories
+ *
+ * The workspace bootstrap manifest creates this layout:
+ *
+ * @code{.text}
+ * RoModularWorkspace/
+ * |
+ * +-- RoModular/          ecosystem portal: catalog, architecture, bootstrap pins
+ * +-- RoModularBuild/     shared CMake presets, toolchains, scripts and CI actions
+ * |
+ * +-- CPSTL/              portable C++ utility vocabulary
+ * +-- Foundation/         general-purpose base library
+ * +-- DspCore/            DSP algorithms and signal-processing types
+ * +-- MCC/                music-composition theory and utilities
+ * +-- MIDILAR/            MIDI library built on the lower-level libraries
+ * @endcode
+ *
+ * These entries come from RoModular's workspace manifest. They are peer Git
+ * repositories: none is a directory *owned by* another library. `RoModular/`
+ * is the map and integration point; it is not the source tree for DspCore,
+ * MIDILAR or the other libraries.
+ *
+ * `RoModularAgents/` is an optional sibling repository containing collaboration
+ * contracts and reusable guidance. RoModular uses that guidance when it is
+ * available, but the workspace bootstrap does not provision it as a product
+ * dependency. A second Git worktree, such as `DspCore-main/`, is likewise a
+ * local Git convenience rather than another architectural component.
+ *
+ * @section RoModularWorkspaceRoles Role of each repository
+ *
+ * | Repository | Role |
+ * | ---------- | ---- |
+ * | RoModular | Ecosystem portal: documentation, repository catalog, workspace bootstrap and release pins |
+ * | RoModularBuild | Reusable build mechanics: toolchains, presets, helper scripts and composite Actions |
+ * | CPSTL | Portable low-level C++ facilities |
+ * | Foundation | Cross-domain general facilities |
+ * | DspCore | Signal algorithms, filters, analysis, transforms, generators and lookup tables |
+ * | MCC | Music-composition theory and related utilities |
+ * | MIDILAR | MIDI behavior and integration on top of its declared dependencies |
+ * | RoModularAgents | Optional collaboration contracts and reusable engineering guidance |
+ *
+ * An application such as `DspCoreJuceStarter/` lives outside this library
+ * workspace. It is a consumer: it may link DspCore and render a JUCE UI, but
+ * its playback code, visuals and project configuration do not belong in
+ * DspCore.
+ *
+ * @section RoModularWorkspaceInsideLibrary One library repository, concretely
+ *
+ * DspCore is the useful reference shape for a library checkout:
+ *
+ * @code{.text}
+ * DspCore/
+ * |
+ * +-- src/                shipped headers and implementation
+ * +-- tests/              automated API and behavior verification
+ * +-- examples/           small consumer programs; not the library itself
+ * +-- docs/               Doxygen pages and API documentation inputs
+ * +-- cmake/              project-specific CMake integration and adapters
+ * +-- scripts/            project-level build, test and package entry points
+ * +-- .github/workflows/  DspCore's CI and publication decisions
+ * +-- tools/RoModularBuild/
+ * |                       pinned submodule with shared build implementation
+ * +-- CMakeLists.txt, CMakePresets.json, library.properties, README.md
+ *                         package contract and developer entry points
+ * @endcode
+ *
+ * The `tools/RoModularBuild/` directory is deliberately duplicated as a
+ * *pinned submodule* inside a standalone library clone. It is the same build
+ * project as the workspace-level `RoModularBuild/`, frozen at the revision that
+ * the library has validated. It does not make build tooling part of DspCore's
+ * DSP API, nor does it mean GitHub Actions live there.
+ *
+ * @section RoModularWorkspaceDependencies The C++ dependency graph
+ *
+ * This graph shows only *direct library* dependencies. `A -> B` means that
+ * `A` depends on `B`; a transitive dependency follows a path, such as
+ * `DspCore -> Foundation -> CPSTL`. The graph deliberately excludes the
+ * portal, agents, CI workflows and RoModularBuild because none is a runtime or
+ * library dependency.
+ *
+ * @dot
+ * digraph RoModularLibraryDependencies {
+ *   graph [rankdir=LR, bgcolor="transparent", pad="0.25", nodesep="0.5", ranksep="0.75"];
+ *   node [shape=box, style="rounded,filled", color="#39557a", fillcolor="#eef4ff", fontname="Helvetica"];
+ *   edge [color="#52677f", fontname="Helvetica", fontsize=10];
+ *
+ *   midilar [label="MIDILAR\nMIDI and music systems", fillcolor="#dce9ff"];
+ *   dsp [label="DspCore\nsignal processing"];
+ *   mcc [label="MCC\nmusic theory"];
+ *   foundation [label="Foundation\ngeneral C++ base"];
+ *   cpstl [label="CPSTL\nportable std vocabulary"];
+ *
+ *   midilar -> dsp;
+ *   midilar -> mcc;
+ *   midilar -> foundation;
+ *   dsp -> foundation;
+ *   mcc -> foundation;
+ *   foundation -> cpstl;
+ * }
+ * @enddot
+ *
+ * So a DSP algorithm belongs in DspCore; MIDI behavior belongs in MIDILAR;
+ * build behavior shared among projects belongs in RoModularBuild; and a map or
+ * release pin belongs here in RoModular.
+ *
+ * @section RoModularDeliveryFlow From source tree to published artifact
+ *
+ * Once the repository boundary is clear, delivery is straightforward:
+ *
+ * @code{.text}
+ * source + tests in the owning library
+ *                 |
+ *                 v
+ * that library's .github/workflows/ chooses what to validate
+ *                 |
+ *                 v
+ * pinned RoModularBuild action/preset supplies reusable mechanics
+ *                 |
+ *                 v
+ * library commit and version tag publish the resolved dependency version
+ *                 |
+ *                 v
+ * consumers update their required version; RoModular updates a pin if needed
+ * @endcode
+ *
+ * Workflows are always declared in the owning repository under
+ * `.github/workflows/`: for example, DspCore's Actions page lists DspCore
+ * workflows. Those workflow files can call local paths such as
+ * `./tools/RoModularBuild/actions/project-workflow`, which is why reusable
+ * action code is found under the pinned build submodule.
+ *
+ * @subsection RoModularWorkspaceDspCoreRelease Example: a DspCore release
+ *
+ * A new DspCore API is implemented, tested and documented in `DspCore/`; its
+ * supported build/package checks run from that repository. After it is tagged,
+ * a consumer such as MIDILAR records the version it requires. RoModular changes
+ * only if its installation manifest or high-level documentation needs the new
+ * released pin. A JUCE test app can then consume the tag without adding its UI
+ * or transport code to DspCore.
+ *
+ * @section RoModularWorkspaceOrientation A quick way to orient yourself
+ *
+ * 1. Start with the affected behavior and select its owning library from the
+ *    workspace tree.
+ * 2. Inside that repository, use `src/` for product code and `tests/` to prove
+ *    it; use `docs/` to describe its contract.
+ * 3. Enter `tools/RoModularBuild/` only when the shared build mechanics need
+ *    changing. Read a workflow in `.github/workflows/` when you need to know
+ *    what that particular project runs.
+ * 4. Return to RoModular only for cross-repository catalog, bootstrap, pin or
+ *    architectural documentation work.
+ *
+ * This separation is intentional: you should be able to understand a library
+ * and make a focused library change without first understanding all of the
+ * ecosystem automation.
+ */
