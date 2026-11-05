@@ -6,7 +6,7 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | General-purpose types, containers, math, time, callbacks, scheduling, and utilities |
- * | Active baseline | `v0.0.1` (coordinated release pending) |
+ * | Active baseline | `v0.0.1` (closed immutable baseline) |
  * | Status | Active baseline foundation layer |
  * | Source | [ChecheRomo96/Foundation](https://github.com/ChecheRomo96/Foundation) |
  * | Documentation | [Foundation on GitHub Pages](https://checheromo96.github.io/Foundation/) |
