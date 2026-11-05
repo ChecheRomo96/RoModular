@@ -6,15 +6,15 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Portable signal processing without MIDI or music-theory concepts |
- * | Current release | [`v0.3.0`](https://github.com/ChecheRomo96/DspCore/tree/v0.3.0) |
+ * | Active baseline | `v0.0.1` (coordinated release pending) |
  * | Source | [ChecheRomo96/DspCore](https://github.com/ChecheRomo96/DspCore) |
- * | Runtime dependencies | Foundation `2.0.10` or a newer 2.x release |
+ * | Runtime dependencies | Foundation `0.0.1` or a newer 0.x release |
  * | Public CMake target | `DspCore::DspCore` |
  *
  * DspCore owns signal-processing concepts separately from MIDI and music theory.
  * It consumes pinned RoModularBuild `v0.6.2`, as do the other runtime libraries.
- * DspCore `v0.3.0` provides lookup tables, interpolation, generators, filters,
- * block and streaming analysis, and configured DFT/FFT transforms. MIDILAR pins
- * DspCore `0.3.0` or a newer 0.x release. Arduino source builds support stock
+ * DspCore's 0.0.1 baseline provides lookup tables, interpolation, generators,
+ * filters, block and streaming analysis, and configured DFT/FFT transforms.
+ * MIDILAR pins DspCore `0.0.1` or a newer 0.x release. Arduino source builds support stock
  * C++11; CMake packages and direct-source integrations use C++17.
  */
