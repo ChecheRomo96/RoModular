@@ -30,10 +30,8 @@
  * is the map and integration point; it is not the source tree for DspCore,
  * MIDILAR or the other libraries.
  *
- * contracts and reusable guidance. RoModular uses that guidance when it is
- * available, but the workspace bootstrap does not provision it as a product
- * dependency. A second Git worktree, such as `DspCore-main/`, is likewise a
- * local Git convenience rather than another architectural component.
+ * A second Git worktree, such as `DspCore-main/`, is a local Git convenience
+ * rather than another architectural component.
  *
  * @section RoModularWorkspaceRoles Role of each repository
  *
@@ -83,6 +81,7 @@
  * This graph shows only *direct library* dependencies. `A -> B` means that
  * `A` depends on `B`; a transitive dependency follows a path, such as
  * `DspCore -> Foundation -> CPSTL`. The graph deliberately excludes the
+ * portal, CI workflows and RoModularBuild because none is a runtime or
  * library dependency.
  *
  * @dot
