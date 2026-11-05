@@ -6,7 +6,7 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Portable signal processing without MIDI or music-theory concepts |
- * | Active baseline | `v0.0.1` (coordinated release pending) |
+ * | Active baseline | `v0.0.1` (closed immutable baseline) |
  * | Source | [ChecheRomo96/DspCore](https://github.com/ChecheRomo96/DspCore) |
  * | Runtime dependencies | Foundation `0.0.1` or a newer 0.x release |
  * | Public CMake target | `DspCore::DspCore` |

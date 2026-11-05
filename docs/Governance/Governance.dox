@@ -24,11 +24,11 @@
  * | ---------- | ------ | ------------------------ |
  * | RoModular | Active | Publish and maintain the ecosystem portal |
  * | RoModularBuild | Active | Stabilize the shared profiles already consumed by Foundation and MCC |
- * | CPSTL | Active | Establish the coordinated 0.0.1 baseline with portable C++11 validation |
- * | Foundation | Active | Establish the 0.0.1 baseline on CPSTL 0.0.1 |
- * | DspCore | Active | Establish the 0.0.1 baseline on Foundation 0.0.1 |
- * | MusicCompositionCore | Active | Establish the 0.0.1 baseline on Foundation 0.0.1 |
- * | MIDILAR | Active | Establish the 0.0.1 baseline on Foundation, DspCore and MCC 0.0.1 |
+ * | CPSTL | Active | Closed immutable 0.0.1 baseline with portable C++11 validation |
+ * | Foundation | Active | Closed 0.0.1 baseline on CPSTL 0.0.1 |
+ * | DspCore | Active | Closed 0.0.1 baseline on Foundation 0.0.1 |
+ * | MusicCompositionCore | Active | Closed 0.0.1 baseline on Foundation 0.0.1 |
+ * | MIDILAR | Active | Closed 0.0.1 baseline on Foundation, DspCore and MCC 0.0.1 |
  * | RoModularCLI | Planned | Begin the JDX-style orchestration tool only after the ecosystem and multiplatform bootstrap are stable |
  *
  * @section RoModularDocumentationOwnership Documentation Ownership

@@ -6,7 +6,7 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | MIDI protocol data, parsing, routing, timing, transports and devices |
- * | Active baseline | `v0.0.1` (coordinated release pending) |
+ * | Active baseline | `v0.0.1` (closed immutable baseline) |
  * | Status | Active; MIDI-CI deferred |
  * | Source | [ChecheRomo96/MIDILAR](https://github.com/ChecheRomo96/MIDILAR) |
  * | Documentation | [MIDILAR on GitHub Pages](https://checheromo96.github.io/MIDILAR/) |
