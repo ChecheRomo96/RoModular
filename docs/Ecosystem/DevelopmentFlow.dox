@@ -83,6 +83,7 @@
  * This graph shows only *direct library* dependencies. `A -> B` means that
  * `A` depends on `B`; a transitive dependency follows a path, such as
  * `DspCore -> Foundation -> CPSTL`. The graph deliberately excludes the
+ * portal, CI workflows and RoModularBuild because none is a runtime or
  * library dependency.
  *
  * @dot
