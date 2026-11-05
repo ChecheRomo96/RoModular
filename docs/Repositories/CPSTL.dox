@@ -6,7 +6,7 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Bottom layer: `cpstd` containers, algorithms, traits and utilities |
- * | Active baseline | `v0.0.1` (coordinated release pending) |
+ * | Active baseline | `v0.0.1` (closed immutable baseline) |
  * | Source | [ChecheRomo96/CPSTL](https://github.com/ChecheRomo96/CPSTL) |
  * | Documentation | [CPSTL on GitHub Pages](https://checheromo96.github.io/CPSTL/) |
  * | Public CMake target | `CPSTL::CPSTL` |

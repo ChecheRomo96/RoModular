@@ -6,7 +6,7 @@
  * | Field | Value |
  * | ----- | ----- |
  * | Role | Pitch, interval, tuning, scale, chord, key, and notation domain models |
- * | Active baseline | `v0.0.1` (coordinated release pending) |
+ * | Active baseline | `v0.0.1` (closed immutable baseline) |
  * | Status | Active baseline music-theory layer |
  * | Source | [ChecheRomo96/MusicCompositionCore](https://github.com/ChecheRomo96/MusicCompositionCore) |
  * | Documentation | [MusicCompositionCore on GitHub Pages](https://checheromo96.github.io/MusicCompositionCore/) |
