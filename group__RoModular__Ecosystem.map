@@ -1,0 +1,6 @@
+<map id="Ecosystem" name="Ecosystem">
+<area shape="rect" id="Node000001" title="Purpose, boundaries, and dependency architecture of RoModular." alt="" coords="5,63,99,88"/>
+<area shape="rect" id="Node000002" href="$group__RoModular__Ecosystem__Architecture.html" title="Current and planned relationships between RoModular repositories." alt="" coords="179,5,281,31"/>
+<area shape="rect" id="Node000003" href="$group__RoModular__Ecosystem__DevelopmentFlow.html" title="A physical map of the workspace first; build and release flow second." alt="" coords="147,55,313,95"/>
+<area shape="rect" id="Node000004" href="$group__RoModular__Ecosystem__Overview.html" title="What RoModular is and what belongs at the ecosystem level." alt="" coords="188,120,272,145"/>
+</map>
